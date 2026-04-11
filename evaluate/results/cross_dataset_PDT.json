@@ -1,0 +1,25 @@
+{
+  "accuracy": 0.8438,
+  "precision": 0.8438,
+  "recall_sensitivity": 1.0,
+  "specificity": 0.0,
+  "f1_score": 0.9153,
+  "confusion_matrix": {
+    "TP": 567,
+    "FP": 105,
+    "TN": 0,
+    "FN": 0
+  },
+  "n_healthy": 105,
+  "n_unhealthy": 567,
+  "n_total": 672,
+  "mean_latency_ms": 26.2,
+  "mean_confidence_correct": 0.896,
+  "mean_confidence_wrong": 0.8048,
+  "confidence_gap": 0.0912,
+  "prediction_distribution": {
+    "crown_root_rot": 520,
+    "leaf_rust": 141,
+    "wheat_loose_smut": 11
+  }
+}

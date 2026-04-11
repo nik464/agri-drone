@@ -1,0 +1,15 @@
+\begin{table}[t]
+\centering
+\caption{Ablation study: component contribution on 935-image test set (21 classes, stratified 15\% split).}
+\label{tab:ablation}
+\begin{tabular}{llccccc}
+\toprule
+Config & Pipeline & Accuracy & Macro-F1 & RWA & Safety Gap & Latency (ms) \\
+\midrule
+A & YOLO-only & 0.9615 & 0.9618 & 0.9610 & +0.0004 & 13.5 \\
+B & YOLO + Rules + Ensemble & 0.6017 & 0.6083 & 0.6689 & -0.0672 & 480.1 \\
+\midrule
+\multicolumn{7}{l}{$\Delta$ (B$-$A): Macro-F1 = -0.3535, $n$ = 935, classes = 21} \\
+\bottomrule
+\end{tabular}
+\end{table}

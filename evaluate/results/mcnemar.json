@@ -1,0 +1,11 @@
+{
+  "b_right_c_wrong": 3,
+  "b_wrong_c_right": 4,
+  "both_right": 12,
+  "both_wrong": 2,
+  "n_discordant": 7,
+  "chi2": 0.0,
+  "p_value": 1.0,
+  "significant_at_005": false,
+  "method": "chi2_continuity_corrected"
+}

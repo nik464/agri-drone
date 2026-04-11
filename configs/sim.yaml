@@ -1,0 +1,45 @@
+---
+# Simulation Configuration
+
+simulation:
+  field:
+    width_m: 100
+    height_m: 100
+    resolution_m: 0.5  # Ground sampling distance
+
+  hotspots:
+    density: 0.15  # Percent of field with hotspots
+    class_distribution:
+      weed: 0.5
+      disease: 0.3
+      pest: 0.15
+      anomaly: 0.05
+    severity_distribution:
+      high: 0.3
+      medium: 0.5
+      low: 0.2
+
+  drone:
+    altitude_m: 50
+    flight_speed_mps: 5
+    camera_fov_degrees: 60
+    coverage_overlap_percent: 20
+
+  environment:
+    temperature_c: 22
+    humidity_percent: 60
+    wind_speed_mps: 2
+    lighting: sunny  # sunny | cloudy | partly_cloudy
+
+  noise:
+    image_gaussian_std: 0.01
+    detection_fp_rate: 0.05
+    detection_fn_rate: 0.10
+
+  spray_simulation:
+    actuate: true
+    spray_only_high_severity: true
+    effectiveness: 0.85
+
+  random_seed: 42
+  num_missions: 5

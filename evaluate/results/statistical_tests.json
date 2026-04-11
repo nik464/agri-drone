@@ -1,0 +1,503 @@
+{
+  "bootstrap_ci": {
+    "A": {
+      "accuracy": {
+        "point": 0.9615,
+        "ci_lower": 0.9486,
+        "ci_upper": 0.9732,
+        "se": 0.0062,
+        "n_boot": 10000,
+        "alpha": 0.05
+      },
+      "macro_f1": {
+        "point": 0.9618,
+        "ci_lower": 0.949,
+        "ci_upper": 0.9733,
+        "se": 0.0062,
+        "n_boot": 10000,
+        "alpha": 0.05
+      },
+      "mcc": {
+        "point": 0.9596,
+        "ci_lower": 0.9461,
+        "ci_upper": 0.9719,
+        "se": 0.0065,
+        "n_boot": 10000,
+        "alpha": 0.05
+      }
+    },
+    "B": {
+      "accuracy": {
+        "point": 0.9572,
+        "ci_lower": 0.9443,
+        "ci_upper": 0.97,
+        "se": 0.0065,
+        "n_boot": 10000,
+        "alpha": 0.05
+      },
+      "macro_f1": {
+        "point": 0.9574,
+        "ci_lower": 0.9442,
+        "ci_upper": 0.9694,
+        "se": 0.0065,
+        "n_boot": 10000,
+        "alpha": 0.05
+      },
+      "mcc": {
+        "point": 0.9551,
+        "ci_lower": 0.9416,
+        "ci_upper": 0.9685,
+        "se": 0.0068,
+        "n_boot": 10000,
+        "alpha": 0.05
+      }
+    },
+    "C": {
+      "accuracy": {
+        "point": 0.1338,
+        "ci_lower": 0.1124,
+        "ci_upper": 0.1563,
+        "se": 0.0111,
+        "n_boot": 10000,
+        "alpha": 0.05
+      },
+      "macro_f1": {
+        "point": 0.0771,
+        "ci_lower": 0.064,
+        "ci_upper": 0.0902,
+        "se": 0.0067,
+        "n_boot": 10000,
+        "alpha": 0.05
+      },
+      "mcc": {
+        "point": 0.0962,
+        "ci_lower": 0.0752,
+        "ci_upper": 0.1185,
+        "se": 0.0111,
+        "n_boot": 10000,
+        "alpha": 0.05
+      }
+    }
+  },
+  "per_class_f1_ci": {
+    "A": {
+      "healthy_rice": {
+        "point": 1.0,
+        "ci_lower": 1.0,
+        "ci_upper": 1.0,
+        "se": 0.0
+      },
+      "healthy_wheat": {
+        "point": 0.9556,
+        "ci_lower": 0.9041,
+        "ci_upper": 0.9903,
+        "se": 0.0229
+      },
+      "rice_bacterial_blight": {
+        "point": 0.989,
+        "ci_lower": 0.962,
+        "ci_upper": 1.0,
+        "se": 0.0112
+      },
+      "rice_blast": {
+        "point": 0.9565,
+        "ci_lower": 0.907,
+        "ci_upper": 0.9905,
+        "se": 0.0221
+      },
+      "rice_brown_spot": {
+        "point": 1.0,
+        "ci_lower": 1.0,
+        "ci_upper": 1.0,
+        "se": 0.0
+      },
+      "rice_leaf_scald": {
+        "point": 0.9655,
+        "ci_lower": 0.9195,
+        "ci_upper": 1.0,
+        "se": 0.0203
+      },
+      "rice_sheath_blight": {
+        "point": 1.0,
+        "ci_lower": 1.0,
+        "ci_upper": 1.0,
+        "se": 0.0
+      },
+      "wheat_aphid": {
+        "point": 0.9545,
+        "ci_lower": 0.9032,
+        "ci_upper": 0.9903,
+        "se": 0.0232
+      },
+      "wheat_black_rust": {
+        "point": 0.9032,
+        "ci_lower": 0.8333,
+        "ci_upper": 0.96,
+        "se": 0.0325
+      },
+      "wheat_blast": {
+        "point": 0.9556,
+        "ci_lower": 0.9053,
+        "ci_upper": 0.9905,
+        "se": 0.0226
+      },
+      "wheat_brown_rust": {
+        "point": 0.8837,
+        "ci_lower": 0.8049,
+        "ci_upper": 0.9474,
+        "se": 0.0372
+      },
+      "wheat_fusarium_head_blight": {
+        "point": 0.9888,
+        "ci_lower": 0.961,
+        "ci_upper": 1.0,
+        "se": 0.0117
+      },
+      "wheat_leaf_blight": {
+        "point": 0.8817,
+        "ci_lower": 0.8052,
+        "ci_upper": 0.9438,
+        "se": 0.0359
+      },
+      "wheat_mite": {
+        "point": 0.9783,
+        "ci_lower": 0.9412,
+        "ci_upper": 1.0,
+        "se": 0.0159
+      },
+      "wheat_powdery_mildew": {
+        "point": 1.0,
+        "ci_lower": 1.0,
+        "ci_upper": 1.0,
+        "se": 0.0
+      },
+      "wheat_root_rot": {
+        "point": 0.9663,
+        "ci_lower": 0.9211,
+        "ci_upper": 1.0,
+        "se": 0.0199
+      },
+      "wheat_septoria": {
+        "point": 0.9888,
+        "ci_lower": 0.962,
+        "ci_upper": 1.0,
+        "se": 0.0115
+      },
+      "wheat_smut": {
+        "point": 0.9663,
+        "ci_lower": 0.9231,
+        "ci_upper": 1.0,
+        "se": 0.0198
+      },
+      "wheat_stem_fly": {
+        "point": 0.9859,
+        "ci_lower": 0.9512,
+        "ci_upper": 1.0,
+        "se": 0.0143
+      },
+      "wheat_tan_spot": {
+        "point": 0.8889,
+        "ci_lower": 0.8116,
+        "ci_upper": 0.95,
+        "se": 0.0355
+      },
+      "wheat_yellow_rust": {
+        "point": 0.9888,
+        "ci_lower": 0.961,
+        "ci_upper": 1.0,
+        "se": 0.0115
+      }
+    },
+    "B": {
+      "healthy_rice": {
+        "point": 1.0,
+        "ci_lower": 1.0,
+        "ci_upper": 1.0,
+        "se": 0.0
+      },
+      "healthy_wheat": {
+        "point": 0.9556,
+        "ci_lower": 0.9041,
+        "ci_upper": 0.9903,
+        "se": 0.0229
+      },
+      "rice_bacterial_blight": {
+        "point": 0.989,
+        "ci_lower": 0.962,
+        "ci_upper": 1.0,
+        "se": 0.0112
+      },
+      "rice_blast": {
+        "point": 0.9565,
+        "ci_lower": 0.907,
+        "ci_upper": 0.9905,
+        "se": 0.0221
+      },
+      "rice_brown_spot": {
+        "point": 1.0,
+        "ci_lower": 1.0,
+        "ci_upper": 1.0,
+        "se": 0.0
+      },
+      "rice_leaf_scald": {
+        "point": 0.9655,
+        "ci_lower": 0.9195,
+        "ci_upper": 1.0,
+        "se": 0.0203
+      },
+      "rice_sheath_blight": {
+        "point": 1.0,
+        "ci_lower": 1.0,
+        "ci_upper": 1.0,
+        "se": 0.0
+      },
+      "wheat_aphid": {
+        "point": 0.9425,
+        "ci_lower": 0.8837,
+        "ci_upper": 0.988,
+        "se": 0.0262
+      },
+      "wheat_black_rust": {
+        "point": 0.8842,
+        "ci_lower": 0.8085,
+        "ci_upper": 0.946,
+        "se": 0.0351
+      },
+      "wheat_blast": {
+        "point": 0.9663,
+        "ci_lower": 0.9213,
+        "ci_upper": 1.0,
+        "se": 0.0199
+      },
+      "wheat_brown_rust": {
+        "point": 0.8837,
+        "ci_lower": 0.8049,
+        "ci_upper": 0.9474,
+        "se": 0.0372
+      },
+      "wheat_fusarium_head_blight": {
+        "point": 0.9888,
+        "ci_lower": 0.961,
+        "ci_upper": 1.0,
+        "se": 0.0117
+      },
+      "wheat_leaf_blight": {
+        "point": 0.8913,
+        "ci_lower": 0.8172,
+        "ci_upper": 0.9531,
+        "se": 0.0348
+      },
+      "wheat_mite": {
+        "point": 0.9677,
+        "ci_lower": 0.9245,
+        "ci_upper": 1.0,
+        "se": 0.019
+      },
+      "wheat_powdery_mildew": {
+        "point": 0.989,
+        "ci_lower": 0.9623,
+        "ci_upper": 1.0,
+        "se": 0.0112
+      },
+      "wheat_root_rot": {
+        "point": 0.9663,
+        "ci_lower": 0.9211,
+        "ci_upper": 1.0,
+        "se": 0.0199
+      },
+      "wheat_septoria": {
+        "point": 0.9888,
+        "ci_lower": 0.962,
+        "ci_upper": 1.0,
+        "se": 0.0115
+      },
+      "wheat_smut": {
+        "point": 0.9663,
+        "ci_lower": 0.9231,
+        "ci_upper": 1.0,
+        "se": 0.0198
+      },
+      "wheat_stem_fly": {
+        "point": 0.9859,
+        "ci_lower": 0.9512,
+        "ci_upper": 1.0,
+        "se": 0.0143
+      },
+      "wheat_tan_spot": {
+        "point": 0.8506,
+        "ci_lower": 0.7606,
+        "ci_upper": 0.9231,
+        "se": 0.0414
+      },
+      "wheat_yellow_rust": {
+        "point": 0.967,
+        "ci_lower": 0.9231,
+        "ci_upper": 1.0,
+        "se": 0.0195
+      }
+    },
+    "C": {
+      "healthy_rice": {
+        "point": 0.4444,
+        "ci_lower": 0.3536,
+        "ci_upper": 0.5297,
+        "se": 0.045
+      },
+      "healthy_wheat": {
+        "point": 0,
+        "ci_lower": 0.0,
+        "ci_upper": 0.0,
+        "se": 0.0
+      },
+      "rice_bacterial_blight": {
+        "point": 0.1593,
+        "ci_lower": 0.0702,
+        "ci_upper": 0.2533,
+        "se": 0.0468
+      },
+      "rice_blast": {
+        "point": 0.026,
+        "ci_lower": 0.0,
+        "ci_upper": 0.0845,
+        "se": 0.0251
+      },
+      "rice_brown_spot": {
+        "point": 0,
+        "ci_lower": 0.0,
+        "ci_upper": 0.0,
+        "se": 0.0
+      },
+      "rice_leaf_scald": {
+        "point": 0.0571,
+        "ci_lower": 0.0,
+        "ci_upper": 0.1412,
+        "se": 0.0386
+      },
+      "rice_sheath_blight": {
+        "point": 0,
+        "ci_lower": 0.0,
+        "ci_upper": 0.0,
+        "se": 0.0
+      },
+      "wheat_aphid": {
+        "point": 0.1311,
+        "ci_lower": 0.0513,
+        "ci_upper": 0.2149,
+        "se": 0.0419
+      },
+      "wheat_black_rust": {
+        "point": 0.098,
+        "ci_lower": 0.0215,
+        "ci_upper": 0.1818,
+        "se": 0.0403
+      },
+      "wheat_blast": {
+        "point": 0,
+        "ci_lower": 0.0,
+        "ci_upper": 0.0,
+        "se": 0.0
+      },
+      "wheat_brown_rust": {
+        "point": 0,
+        "ci_lower": 0.0,
+        "ci_upper": 0.0,
+        "se": 0.0
+      },
+      "wheat_fusarium_head_blight": {
+        "point": 0.0893,
+        "ci_lower": 0.0402,
+        "ci_upper": 0.1422,
+        "se": 0.0261
+      },
+      "wheat_leaf_blight": {
+        "point": 0,
+        "ci_lower": 0.0,
+        "ci_upper": 0.0,
+        "se": 0.0
+      },
+      "wheat_mite": {
+        "point": 0.1791,
+        "ci_lower": 0.0615,
+        "ci_upper": 0.3051,
+        "se": 0.063
+      },
+      "wheat_powdery_mildew": {
+        "point": 0.2278,
+        "ci_lower": 0.1067,
+        "ci_upper": 0.3516,
+        "se": 0.0625
+      },
+      "wheat_root_rot": {
+        "point": 0,
+        "ci_lower": 0.0,
+        "ci_upper": 0.0,
+        "se": 0.0
+      },
+      "wheat_septoria": {
+        "point": 0,
+        "ci_lower": 0.0,
+        "ci_upper": 0.0,
+        "se": 0.0
+      },
+      "wheat_smut": {
+        "point": 0,
+        "ci_lower": 0.0,
+        "ci_upper": 0.0,
+        "se": 0.0
+      },
+      "wheat_stem_fly": {
+        "point": 0,
+        "ci_lower": 0.0,
+        "ci_upper": 0.0,
+        "se": 0.0
+      },
+      "wheat_tan_spot": {
+        "point": 0,
+        "ci_lower": 0.0,
+        "ci_upper": 0.0,
+        "se": 0.0
+      },
+      "wheat_yellow_rust": {
+        "point": 0.2062,
+        "ci_lower": 0.1468,
+        "ci_upper": 0.2651,
+        "se": 0.0302
+      }
+    }
+  },
+  "mcnemar": {
+    "A_vs_B": {
+      "n11_both_correct": 894,
+      "n10_x_correct_y_wrong": 4,
+      "n01_x_wrong_y_correct": 0,
+      "n00_both_wrong": 36,
+      "discordant_pairs": 4,
+      "chi2_statistic": 2.25,
+      "p_value": 0.133614,
+      "significant_005": false,
+      "significant_001": false
+    },
+    "A_vs_C": {
+      "n11_both_correct": 123,
+      "n10_x_correct_y_wrong": 775,
+      "n01_x_wrong_y_correct": 2,
+      "n00_both_wrong": 34,
+      "discordant_pairs": 777,
+      "chi2_statistic": 767.0322,
+      "p_value": 0.0,
+      "significant_005": true,
+      "significant_001": true
+    },
+    "B_vs_C": {
+      "n11_both_correct": 123,
+      "n10_x_correct_y_wrong": 771,
+      "n01_x_wrong_y_correct": 2,
+      "n00_both_wrong": 38,
+      "discordant_pairs": 773,
+      "chi2_statistic": 763.0323,
+      "p_value": 0.0,
+      "significant_005": true,
+      "significant_001": true
+    }
+  }
+}

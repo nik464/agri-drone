@@ -1,0 +1,32 @@
+{
+  "current_config": {
+    "color_scale": 20,
+    "stripe_weight": 0.5,
+    "yolo_override_threshold": 0.85
+  },
+  "current_config_F1": 0.2813,
+  "current_config_RWA": 0.3804,
+  "current_config_accuracy": 0.3316,
+  "optimal_config": {
+    "color_scale": 23,
+    "stripe_weight": 0.5,
+    "yolo_override_threshold": 0.75
+  },
+  "optimal_config_F1": 0.2878,
+  "optimal_config_RWA": 0.3933,
+  "optimal_config_accuracy": 0.3401,
+  "F1_std_across_configs": 0.0087,
+  "RWA_std_across_configs": 0.0178,
+  "F1_range": [
+    0.2537,
+    0.2878
+  ],
+  "RWA_range": [
+    0.3316,
+    0.3996
+  ],
+  "n_configs_evaluated": 125,
+  "n_val_images": 935,
+  "precompute_time_s": 210.1,
+  "conclusion": "thresholds near-optimal"
+}

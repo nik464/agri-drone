@@ -1,0 +1,157 @@
+# ==============================================================================
+# AgriDrone .gitignore
+# Python + Node.js + ML/Data Science project
+# ==============================================================================
+
+# ──────────────────────────── Python ──────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.pyo
+*.pyd
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# ──────────────────────────── Virtual Environments ────────────────────────────
+.venv/
+venv/
+env/
+ENV/
+
+# ──────────────────────────── Node.js ─────────────────────────────────────────
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnp
+.pnp.js
+
+# ──────────────────────────── IDE / Editor ────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+
+# ──────────────────────────── OS Files ────────────────────────────────────────
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.lnk
+
+# ──────────────────────────── Environment / Secrets ───────────────────────────
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# ──────────────────────────── Model Weights ───────────────────────────────────
+# All .pt model files — download separately (see README)
+*.pt
+*.pth
+*.onnx
+*.h5
+*.tflite
+*.pb
+models/
+
+# ──────────────────────────── Datasets (large) ────────────────────────────────
+data/
+datasets/
+*.zip
+*.tar.gz
+*.tar
+*.rar
+*.7z
+
+# ──────────────────────────── Training Outputs ────────────────────────────────
+outputs/
+runs/
+
+# ──────────────────────────── Evaluation Caches ───────────────────────────────
+evaluate/llava_cache/
+evaluate/noisy_dataset/
+
+# ──────────────────────────── Jupyter Notebooks ───────────────────────────────
+.ipynb_checkpoints/
+*.ipynb
+
+# ──────────────────────────── Testing / Coverage ──────────────────────────────
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# ──────────────────────────── Build Artifacts ─────────────────────────────────
+*.log
+*.tmp
+*.bak
+*.orig
+
+# ──────────────────────────── Temp files from Claude/Copilot ──────────────────
+tmpclaude-*
+
+# ──────────────────────────── Miscellaneous ───────────────────────────────────
+project_structure.txt
+project_structure2.txt
+structrue
+*.docx
+*.jpe
+file.jpe
+Claude.docx
+
+# Old/backup files that shouldn't be in the repo
+README_old.md
+RESEARCH_PAPER_FINAL_old.md
+
+# Ad-hoc root-level test scripts (not part of the test suite)
+/test_*.py
+/easy_setup.py
+/setup_voice.py
+/fix_unicode_final.py
+/test_fix.py
+/START.py
+
+# Development/session markdown files
+/SESSION_SUMMARY.md
+/BUGFIX_REPORT.md
+/CODE_CLEANUP_SUMMARY.md
+/PIPELINE_COMPLETE.md
+/BACKEND_IMPLEMENTATION_SUMMARY.md
+/IMPLEMENTATION_CHECKLIST_VISION.md
+/IMPLEMENTATION_SUMMARY_VISION.md
+/VISION_QUICK_REFERENCE.md
+/DASHBOARD_QUICK_REFERENCE.md
+/DASHBOARD_SETUP.md
+/DASHBOARD_SUMMARY.md
+/DASHBOARD_UI_GUIDE.md
+/SUBMISSION_CHECKLIST.md
+/RESEARCH_PAPER.md
+/RESEARCH_PAPER_COMPLETE.md
+/RESEARCH_PAPER_FINAL.md
+/RESEARCH_PAPER_FINAL_v2.md
+/CLAUDE.md
+
+# LLaVA evaluation log (not needed for reproduction)
+evaluate/results/llava_progress.log
+evaluate/results/llava_analysis.csv

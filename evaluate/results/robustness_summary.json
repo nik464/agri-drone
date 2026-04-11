@@ -1,0 +1,138 @@
+{
+  "clean": {
+    "accuracy": 0.9615,
+    "macro_f1": 0.9618,
+    "macro_recall": 0.9619,
+    "macro_precision": 0.9624,
+    "n_samples": 934,
+    "mean_latency_ms": 12.1
+  },
+  "noisy": {
+    "accuracy": 0.0931,
+    "macro_f1": 0.0683,
+    "macro_recall": 0.0928,
+    "macro_precision": 0.26,
+    "n_samples": 934,
+    "mean_latency_ms": 5.7
+  },
+  "delta": {
+    "accuracy_pp": -86.84,
+    "macro_f1": -0.8935,
+    "macro_recall": -0.8691
+  },
+  "per_class_delta": {
+    "healthy_rice": {
+      "delta_f1": -1.0,
+      "delta_recall": -1.0
+    },
+    "healthy_wheat": {
+      "delta_f1": -0.7923,
+      "delta_recall": -0.8667
+    },
+    "rice_bacterial_blight": {
+      "delta_f1": -0.989,
+      "delta_recall": -1.0
+    },
+    "rice_blast": {
+      "delta_f1": -0.9565,
+      "delta_recall": -0.9778
+    },
+    "rice_brown_spot": {
+      "delta_f1": -1.0,
+      "delta_recall": -1.0
+    },
+    "rice_leaf_scald": {
+      "delta_f1": -0.9655,
+      "delta_recall": -0.9333
+    },
+    "rice_sheath_blight": {
+      "delta_f1": -1.0,
+      "delta_recall": -1.0
+    },
+    "wheat_aphid": {
+      "delta_f1": -0.916,
+      "delta_recall": -0.9111
+    },
+    "wheat_black_rust": {
+      "delta_f1": -0.9032,
+      "delta_recall": -0.9333
+    },
+    "wheat_blast": {
+      "delta_f1": -0.7056,
+      "delta_recall": -0.8
+    },
+    "wheat_brown_rust": {
+      "delta_f1": -0.7825,
+      "delta_recall": -0.2
+    },
+    "wheat_fusarium_head_blight": {
+      "delta_f1": -0.8712,
+      "delta_recall": -0.9111
+    },
+    "wheat_leaf_blight": {
+      "delta_f1": -0.8382,
+      "delta_recall": -0.8889
+    },
+    "wheat_mite": {
+      "delta_f1": -0.7997,
+      "delta_recall": -0.6667
+    },
+    "wheat_powdery_mildew": {
+      "delta_f1": -0.8454,
+      "delta_recall": -0.6444
+    },
+    "wheat_root_rot": {
+      "delta_f1": -0.9663,
+      "delta_recall": -0.9556
+    },
+    "wheat_septoria": {
+      "delta_f1": -0.9888,
+      "delta_recall": -0.9778
+    },
+    "wheat_smut": {
+      "delta_f1": -0.7663,
+      "delta_recall": -0.8409
+    },
+    "wheat_stem_fly": {
+      "delta_f1": -0.8778,
+      "delta_recall": -0.9429
+    },
+    "wheat_tan_spot": {
+      "delta_f1": -0.8535,
+      "delta_recall": -0.8445
+    },
+    "wheat_yellow_rust": {
+      "delta_f1": -0.9462,
+      "delta_recall": -0.9556
+    }
+  },
+  "worst_5_f1_drops": [
+    {
+      "class": "healthy_rice",
+      "delta_f1": -1.0,
+      "delta_recall": -1.0
+    },
+    {
+      "class": "rice_brown_spot",
+      "delta_f1": -1.0,
+      "delta_recall": -1.0
+    },
+    {
+      "class": "rice_sheath_blight",
+      "delta_f1": -1.0,
+      "delta_recall": -1.0
+    },
+    {
+      "class": "rice_bacterial_blight",
+      "delta_f1": -0.989,
+      "delta_recall": -1.0
+    },
+    {
+      "class": "wheat_septoria",
+      "delta_f1": -0.9888,
+      "delta_recall": -0.9778
+    }
+  ],
+  "n_classes_degraded": 21,
+  "n_classes_total": 21
+}

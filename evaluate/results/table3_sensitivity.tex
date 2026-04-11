@@ -1,0 +1,20 @@
+\begin{table}[t]
+\centering
+\caption{Threshold sensitivity analysis over 125 configurations ($5 \times 5 \times 5$ grid) on 935 validation images. F1 std = 0.0087.}
+\label{tab:sensitivity}
+\begin{tabular}{ccccccc}
+\toprule
+Rank & $\alpha_{color}$ & $w_{stripe}$ & $\tau_{yolo}$ & Macro-F1 & RWA & Accuracy \\
+\midrule
+1 & 23 & 0.5 & 0.75 & 0.2878 & 0.3933 & 0.3401 \\
+2 & 23 & 0.5 & 0.80 & 0.2878 & 0.3933 & 0.3401 \\
+3 & 23 & 0.6 & 0.75 & 0.2878 & 0.3933 & 0.3401 \\
+4 & 23 & 0.6 & 0.80 & 0.2878 & 0.3933 & 0.3401 \\
+5 & 23 & 0.7 & 0.75 & 0.2878 & 0.3933 & 0.3401 \\
+\midrule
+\textit{41} & \textit{20} & \textit{0.5} & \textit{0.85} & \textit{0.2813} & \textit{0.3804} & \textit{0.3316} \\ \% current defaults
+\midrule
+\multicolumn{7}{l}{F1 range: [0.2537, 0.2878], $\sigma$ = 0.0087, $n_{configs}$ = 125} \\
+\bottomrule
+\end{tabular}
+\end{table}

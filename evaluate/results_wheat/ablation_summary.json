@@ -1,0 +1,25 @@
+{
+  "config_A_accuracy": 0.9688,
+  "config_B_accuracy": 0.3906,
+  "config_C_accuracy": null,
+  "config_A_RWA": 0.9743,
+  "config_B_RWA": 0.3955,
+  "config_C_RWA": null,
+  "config_A_macro_f1": 0.937,
+  "config_B_macro_f1": 0.5186,
+  "config_C_macro_f1": null,
+  "B_over_A_F1_delta": {
+    "crown_root_rot": -0.4721,
+    "healthy_wheat": -0.5285,
+    "leaf_rust": -0.332,
+    "wheat_loose_smut": -0.3412
+  },
+  "B_over_A_macro_F1_delta": -0.4184,
+  "safety_gap_A": -0.0055,
+  "safety_gap_B": -0.0049,
+  "safety_gap_C": null,
+  "config_A_mean_latency_ms": 6.1,
+  "config_B_mean_latency_ms": 28.8,
+  "n_test_images": 320,
+  "n_classes": 4
+}

@@ -1,0 +1,128 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agridrone"
+version = "0.1.0"
+description = "Low-cost research prototype for site-specific weed/pest/disease hotspot detection and prescription-map generation using a small drone"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [
+    {name = "AgriDrone Team", email = "research@agridrone.local"}
+]
+keywords = ["agriculture", "drone", "precision-spraying", "computer-vision", "geospatial"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Agricultural Science",
+    "Topic :: Scientific/Engineering :: Image Recognition",
+]
+
+dependencies = [
+    "opencv-python>=4.8.0",
+    "numpy>=1.24.0",
+    "pandas>=2.0.0",
+    "scipy>=1.10.0",
+    "pydantic>=2.0.0",
+    "pydantic-settings>=2.0.0",
+    "fastapi>=0.104.0",
+    "uvicorn>=0.24.0",
+    "httpx>=0.27.0",
+    "fpdf2>=2.7.0",
+    "torch>=2.0.0",
+    "torchvision>=0.15.0",
+    "ultralytics>=8.0.0",
+    "rasterio>=1.3.0",
+    "geopandas>=0.14.0",
+    "shapely>=2.0.0",
+    "pyproj>=3.6.0",
+    "networkx>=3.2",
+    "matplotlib>=3.8.0",
+    "plotly>=5.17.0",
+    "albumentations>=1.3.0",
+    "hydra-core>=1.3.0",
+    "omegaconf>=2.3.0",
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "rich>=13.6.0",
+    "loguru>=0.7.0",
+    "python-dotenv>=1.0.0",
+    "pytz>=2023.3",
+]
+
+[project.optional-dependencies]
+dev = [
+    "black>=23.11.0",
+    "isort>=5.12.0",
+    "flake8>=6.1.0",
+    "mypy>=1.7.0",
+    "pytest-xdist>=3.5.0",
+    "ipython>=8.17.0",
+    "jupyter>=1.0.0",
+    "notebook>=7.0.0",
+]
+ml = [
+    "onnxruntime>=1.16.0",
+    "segment-anything>=1.0",
+    "stable-baselines3>=2.1.0",
+]
+drone = [
+    "pymavlink>=2.4.0",
+    "dronekit>=2.9.2",
+]
+ros = [
+    "rclpy>=0.0.0",
+    "std_msgs>=0.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/research-org/agridrone"
+Documentation = "https://github.com/research-org/agridrone/docs"
+Repository = "https://github.com/research-org/agridrone"
+Issues = "https://github.com/research-org/agridrone/issues"
+
+[tool.setuptools]
+packages = ["agridrone"]
+package-dir = {"" = "src"}
+
+[tool.black]
+line-length = 100
+target-version = ['py311']
+include = '\.pyi?$'
+exclude = '''/(\.git|\.hg|\.mypy_cache|\.tox|\.venv|_build|buck-out|build|dist)/'''
+
+[tool.isort]
+profile = "black"
+line_length = 100
+skip_gitignore = true
+known_first_party = ["agridrone"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+addopts = "-v --strict-markers"
+markers = [
+    "unit: Unit tests",
+    "integration: Integration tests",
+    "slow: Slow running tests",
+    "simulation: Simulation tests",
+]
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+check_untyped_defs = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+follow_imports = "normal"

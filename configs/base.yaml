@@ -1,0 +1,30 @@
+---
+# Base Configuration for AgriDrone Research Prototype
+
+app:
+  name: agridrone
+  version: 0.1.0
+  debug: false
+
+logging:
+  level: INFO
+  format: "{time:YYYY-MM-DD HH:mm:ss} | {level: <8} | {name}:{function}:{line} | {message}"
+  file: outputs/logs/agridrone.log
+  rotation: "100 MB"
+  retention: "7 days"
+
+paths:
+  data_dir: data
+  outputs_dir: outputs
+  models_dir: models
+  configs_dir: configs
+  logs_dir: outputs/logs
+
+input:
+  image_extensions: [.jpg, .jpeg, .png, .tif, .tiff]
+  max_image_size_mb: 500
+
+output:
+  formats: [geojson, shapefile, csv, tiff]
+  crs: EPSG:4326
+  compression: deflate

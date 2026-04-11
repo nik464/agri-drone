@@ -1,0 +1,825 @@
+{
+  "_meta": {
+    "version": "2.0.0",
+    "last_updated": "2026-04-09",
+    "total_profiles": 21,
+    "crops": ["wheat", "rice"],
+    "types": ["disease_fungal", "disease_bacterial", "pest_insect", "healthy"],
+    "description": "Production knowledge base for AgriDrone AI crop disease reasoning engine"
+  },
+
+  "profiles": {
+
+    "healthy_wheat": {
+      "display_name": "Healthy Wheat",
+      "type": "healthy",
+      "severity": 0.0,
+      "crop": "wheat",
+      "symptoms": [
+        "Uniform green color across leaf blade",
+        "No visible lesions, spots, or discoloration",
+        "Normal turgidity and leaf posture",
+        "Consistent color from base to tip"
+      ],
+      "color_signatures": [
+        {"name": "healthy_green", "h_range": [35, 85], "s_range": [40, 255], "v_range": [40, 200]}
+      ],
+      "texture_keywords": ["uniform", "smooth", "no spots", "no lesions"],
+      "affected_parts": [],
+      "confusion_diseases": ["wheat_powdery_mildew", "wheat_septoria"],
+      "treatment": [
+        "No treatment needed",
+        "Continue regular monitoring every 7-10 days",
+        "Maintain balanced NPK fertilization"
+      ],
+      "urgency": "none",
+      "yield_loss_pct": "0%"
+    },
+
+    "healthy_rice": {
+      "display_name": "Healthy Rice",
+      "type": "healthy",
+      "severity": 0.0,
+      "crop": "rice",
+      "symptoms": [
+        "Uniform green color across leaf blade",
+        "No visible lesions, spots, or discoloration",
+        "Normal turgidity and leaf posture"
+      ],
+      "color_signatures": [
+        {"name": "healthy_green", "h_range": [35, 85], "s_range": [40, 255], "v_range": [40, 200]}
+      ],
+      "texture_keywords": ["uniform", "smooth", "no spots"],
+      "affected_parts": [],
+      "confusion_diseases": ["rice_brown_spot", "rice_leaf_scald"],
+      "treatment": [
+        "No treatment needed",
+        "Continue regular monitoring",
+        "Maintain proper water management"
+      ],
+      "urgency": "none",
+      "yield_loss_pct": "0%"
+    },
+
+    "wheat_fusarium_head_blight": {
+      "display_name": "Fusarium Head Blight (FHB / Scab)",
+      "type": "disease_fungal",
+      "severity": 0.9,
+      "crop": "wheat",
+      "symptoms": [
+        "Bleached/whitened spikelets on wheat head while adjacent spikelets remain green",
+        "Pink, orange, or salmon-colored spore masses (sporodochia) on infected spikelets",
+        "Premature ripening of individual spikelets",
+        "Shriveled, lightweight, chalky-white or pink-tinged kernels (tombstone kernels)",
+        "Dark brown discoloration at base of infected spikelets"
+      ],
+      "color_signatures": [
+        {"name": "bleached_spikelet", "h_range": [15, 35], "s_range": [20, 100], "v_range": [160, 255]},
+        {"name": "pink_orange_spores", "h_range": [5, 25], "s_range": [80, 255], "v_range": [120, 255]},
+        {"name": "salmon_sporodochia", "h_range": [0, 20], "s_range": [60, 200], "v_range": [140, 255]}
+      ],
+      "texture_keywords": ["bleached", "whitened", "pink mass", "orange spores", "premature"],
+      "affected_parts": ["head", "spikelet", "kernel"],
+      "confusion_diseases": ["wheat_black_rust", "wheat_blast", "wheat_yellow_rust"],
+      "treatment": [
+        "Apply Metconazole (Caramba) at 13-17 fl oz at flowering stage",
+        "Proline 480 SC at 6.5-8.2 fl oz",
+        "Prosaro Pro SC at 10.3-13.6 fl oz",
+        "Miravis Ace SE at 13.7 fl oz (most effective for FHB)",
+        "AVOID strobilurin (QoI/FRAC 11) fungicides after flag leaf — they increase DON toxin",
+        "Use Tebuconazole 25.9% EC @ 1ml/L (Indian recommendation)"
+      ],
+      "urgency": "immediate",
+      "yield_loss_pct": "20-50%",
+      "pathogen": "Fusarium graminearum",
+      "favorable_conditions": "Warm (20-30°C), humid, rain during flowering"
+    },
+
+    "wheat_yellow_rust": {
+      "display_name": "Yellow / Stripe Rust",
+      "type": "disease_fungal",
+      "severity": 0.85,
+      "crop": "wheat",
+      "symptoms": [
+        "Bright yellow-orange pustules arranged in distinct linear stripes along leaf veins",
+        "Stripes run parallel to the leaf midrib",
+        "Leaves may curl and dry from tip downward",
+        "Severe infections cause entire leaf yellowing and drying",
+        "Orange-yellow powdery urediniospores released from pustule stripes"
+      ],
+      "color_signatures": [
+        {"name": "vivid_yellow_pustules", "h_range": [18, 38], "s_range": [140, 255], "v_range": [150, 255]},
+        {"name": "orange_yellow_spores", "h_range": [10, 25], "s_range": [160, 255], "v_range": [140, 255]},
+        {"name": "stripe_yellowing", "h_range": [20, 45], "s_range": [80, 200], "v_range": [130, 255]},
+        {"name": "leaf_drying", "h_range": [15, 30], "s_range": [60, 180], "v_range": [80, 180]}
+      ],
+      "texture_keywords": ["stripe", "linear", "yellow pustule", "parallel lines", "vivid yellow"],
+      "affected_parts": ["leaf", "sheath"],
+      "confusion_diseases": ["wheat_brown_rust", "wheat_black_rust", "wheat_tan_spot"],
+      "treatment": [
+        "Apply Propiconazole 25% EC @ 0.1% (1ml/L)",
+        "Triadimefon 25 WP @ 0.1%",
+        "Tebuconazole 25.9% EC @ 1ml/L",
+        "Apply at first sign of pustules, repeat after 15 days if needed"
+      ],
+      "urgency": "immediate",
+      "yield_loss_pct": "40-100%",
+      "pathogen": "Puccinia striiformis f. sp. tritici",
+      "favorable_conditions": "Cool (10-15°C), moist, cloudy, wind-dispersed"
+    },
+
+    "wheat_black_rust": {
+      "display_name": "Black / Stem Rust",
+      "type": "disease_fungal",
+      "severity": 0.8,
+      "crop": "wheat",
+      "symptoms": [
+        "Large, dark reddish-brown to black oval pustules on stems and leaves",
+        "Pustules rupture the epidermis, giving a rough/torn appearance",
+        "Pustules scattered randomly (not in stripes)",
+        "Stems may weaken and lodge (fall over)",
+        "Late-season black telial pustules"
+      ],
+      "color_signatures": [
+        {"name": "dark_pustules", "h_range": [0, 15], "s_range": [80, 255], "v_range": [40, 150]},
+        {"name": "reddish_brown", "h_range": [0, 20], "s_range": [100, 255], "v_range": [60, 180]}
+      ],
+      "texture_keywords": ["dark pustule", "rough", "torn epidermis", "reddish brown"],
+      "affected_parts": ["stem", "leaf", "sheath"],
+      "confusion_diseases": ["wheat_brown_rust", "wheat_fusarium_head_blight"],
+      "treatment": [
+        "Apply Mancozeb 75 WP @ 2.5g/L",
+        "Propiconazole 25% EC @ 0.1%",
+        "Triadimefon 25 WP @ 0.1%"
+      ],
+      "urgency": "immediate",
+      "yield_loss_pct": "30-70%",
+      "pathogen": "Puccinia graminis f. sp. tritici",
+      "favorable_conditions": "Warm (20-30°C), humid, late season"
+    },
+
+    "wheat_brown_rust": {
+      "display_name": "Brown / Leaf Rust",
+      "type": "disease_fungal",
+      "severity": 0.75,
+      "crop": "wheat",
+      "symptoms": [
+        "Small, round orange-brown pustules scattered on upper leaf surface",
+        "Pustules are circular (not striped) and feel rough/gritty",
+        "Lower leaf surface may show yellow-brown spots",
+        "Leaves turn yellow and dry prematurely"
+      ],
+      "color_signatures": [
+        {"name": "orange_brown_pustules", "h_range": [8, 25], "s_range": [100, 255], "v_range": [100, 220]}
+      ],
+      "texture_keywords": ["round pustule", "scattered", "rough", "gritty", "orange brown"],
+      "affected_parts": ["leaf"],
+      "confusion_diseases": ["wheat_yellow_rust", "wheat_black_rust"],
+      "treatment": [
+        "Spray Tebuconazole 250 EC @ 1ml/L",
+        "Propiconazole 25% EC @ 0.1%"
+      ],
+      "urgency": "within_7_days",
+      "yield_loss_pct": "15-40%",
+      "pathogen": "Puccinia triticina",
+      "favorable_conditions": "Moderate temp (15-25°C), high humidity, dew"
+    },
+
+    "wheat_powdery_mildew": {
+      "display_name": "Powdery Mildew",
+      "type": "disease_fungal",
+      "severity": 0.6,
+      "crop": "wheat",
+      "symptoms": [
+        "White to gray powdery fungal growth on leaf surfaces",
+        "Powder-like coating on stems and leaf sheaths",
+        "Leaves may turn yellow beneath the mildew",
+        "Small black fruiting bodies (cleistothecia) in late stage"
+      ],
+      "color_signatures": [
+        {"name": "white_powder", "h_range": [0, 180], "s_range": [0, 40], "v_range": [180, 255]},
+        {"name": "gray_coating", "h_range": [0, 180], "s_range": [0, 50], "v_range": [120, 200]}
+      ],
+      "texture_keywords": ["powdery", "white coating", "gray powder", "fuzzy"],
+      "affected_parts": ["leaf", "stem", "sheath"],
+      "confusion_diseases": ["wheat_leaf_blight"],
+      "treatment": [
+        "Spray Sulfur 80 WP @ 3g/L",
+        "Propiconazole 25% EC @ 0.1%",
+        "Carbendazim 50 WP @ 1g/L"
+      ],
+      "urgency": "within_7_days",
+      "yield_loss_pct": "10-30%",
+      "pathogen": "Blumeria graminis f. sp. tritici",
+      "favorable_conditions": "Cool (15-22°C), high humidity, dense canopy"
+    },
+
+    "wheat_blast": {
+      "display_name": "Wheat Blast",
+      "type": "disease_fungal",
+      "severity": 0.85,
+      "crop": "wheat",
+      "symptoms": [
+        "Bleaching of entire wheat head above the point of infection",
+        "Dark brown/black lesion at rachis node (infection point)",
+        "Complete bleaching of head (differs from FHB partial bleaching)",
+        "Gray discoloration at infection point on rachis"
+      ],
+      "color_signatures": [
+        {"name": "bleached_head", "h_range": [15, 40], "s_range": [10, 80], "v_range": [170, 255]},
+        {"name": "dark_lesion_rachis", "h_range": [0, 20], "s_range": [30, 150], "v_range": [20, 100]}
+      ],
+      "texture_keywords": ["complete bleaching", "rachis lesion", "dark node", "total head death"],
+      "affected_parts": ["head", "rachis"],
+      "confusion_diseases": ["wheat_fusarium_head_blight", "wheat_black_rust"],
+      "treatment": [
+        "No effective fungicide treatment once infected",
+        "Preventive: Mancozeb 75 WP before heading",
+        "Resistant varieties are the primary management tool"
+      ],
+      "urgency": "immediate",
+      "yield_loss_pct": "40-100%",
+      "pathogen": "Magnaporthe oryzae Triticum pathotype",
+      "favorable_conditions": "Warm (25-30°C), high humidity, rain during heading"
+    },
+
+    "wheat_septoria": {
+      "display_name": "Septoria Leaf Blotch",
+      "type": "disease_fungal",
+      "severity": 0.7,
+      "crop": "wheat",
+      "symptoms": [
+        "Tan to brown irregular lesions on leaves",
+        "Tiny black dots (pycnidia) visible within lesions",
+        "Lesions have dark margins",
+        "Lower leaves affected first, progresses upward"
+      ],
+      "color_signatures": [
+        {"name": "tan_lesions", "h_range": [15, 30], "s_range": [40, 150], "v_range": [100, 200]}
+      ],
+      "texture_keywords": ["tan lesion", "black dots", "pycnidia", "irregular blotch"],
+      "affected_parts": ["leaf"],
+      "confusion_diseases": ["wheat_tan_spot", "wheat_leaf_blight"],
+      "treatment": [
+        "Apply Azoxystrobin at flag leaf stage",
+        "Propiconazole 25% EC @ 0.1%"
+      ],
+      "urgency": "within_7_days",
+      "yield_loss_pct": "15-30%",
+      "pathogen": "Zymoseptoria tritici",
+      "favorable_conditions": "Cool-moderate (15-25°C), rainy, splash-dispersed"
+    },
+
+    "wheat_leaf_blight": {
+      "display_name": "Wheat Leaf Blight",
+      "type": "disease_fungal",
+      "severity": 0.7,
+      "crop": "wheat",
+      "symptoms": [
+        "Large oval to elongated water-soaked lesions on leaves",
+        "Lesions turn brown with yellow halo",
+        "Lesions may coalesce and kill entire leaf"
+      ],
+      "color_signatures": [
+        {"name": "brown_lesion_yellow_halo", "h_range": [18, 35], "s_range": [60, 200], "v_range": [100, 220]}
+      ],
+      "texture_keywords": ["water-soaked", "brown lesion", "yellow halo", "blight"],
+      "affected_parts": ["leaf"],
+      "confusion_diseases": ["wheat_septoria", "wheat_tan_spot"],
+      "treatment": [
+        "Spray Mancozeb + Carbendazim combo",
+        "Propiconazole 25% EC"
+      ],
+      "urgency": "within_7_days",
+      "yield_loss_pct": "10-25%",
+      "pathogen": "Bipolaris sorokiniana / Alternaria triticina",
+      "favorable_conditions": "Warm (25-30°C), humid, late tillering to heading"
+    },
+
+    "wheat_tan_spot": {
+      "display_name": "Tan Spot",
+      "type": "disease_fungal",
+      "severity": 0.6,
+      "crop": "wheat",
+      "symptoms": [
+        "Small tan to brown lens-shaped spots on leaves",
+        "Dark brown to black center with yellow halo (eye spot appearance)",
+        "Spots are oval/circular and discrete (NOT in linear stripes)",
+        "Spots may merge into larger necrotic areas in severe cases"
+      ],
+      "color_signatures": [
+        {"name": "tan_lesion_dull", "h_range": [12, 28], "s_range": [40, 140], "v_range": [100, 200]},
+        {"name": "dark_eyespot_center", "h_range": [5, 20], "s_range": [60, 180], "v_range": [40, 130]}
+      ],
+      "texture_keywords": ["lens-shaped", "eye spot", "tan center", "yellow halo", "circular spots"],
+      "affected_parts": ["leaf"],
+      "confusion_diseases": ["wheat_septoria", "wheat_leaf_blight", "wheat_yellow_rust"],
+      "treatment": [
+        "Rotate crops; apply Pyraclostrobin + Propiconazole 25% EC",
+        "Mancozeb 75 WP @ 2.5g/L as preventive"
+      ],
+      "urgency": "within_7_days",
+      "yield_loss_pct": "5-20%",
+      "pathogen": "Pyrenophora tritici-repentis",
+      "favorable_conditions": "Moderate (15-28°C), stubble-borne, no-till fields"
+    },
+
+    "wheat_smut": {
+      "display_name": "Wheat Smut",
+      "type": "disease_fungal",
+      "severity": 0.65,
+      "crop": "wheat",
+      "symptoms": [
+        "Grains replaced by dark black-brown powdery spore masses",
+        "Fishy or rotten smell from infected heads",
+        "Kernels appear swollen and dark before breaking open"
+      ],
+      "color_signatures": [
+        {"name": "dark_spore_mass", "h_range": [0, 180], "s_range": [0, 80], "v_range": [0, 60]}
+      ],
+      "texture_keywords": ["black powder", "dark spores", "fishy smell", "swollen kernel"],
+      "affected_parts": ["head", "kernel"],
+      "confusion_diseases": [],
+      "treatment": [
+        "Seed treatment with Carboxin + Thiram before planting",
+        "Vitavax Power @ 2g/kg seed"
+      ],
+      "urgency": "within_30_days",
+      "yield_loss_pct": "5-30%",
+      "pathogen": "Ustilago tritici / Tilletia indica",
+      "favorable_conditions": "Seed-borne, cool-moderate at sowing"
+    },
+
+    "wheat_root_rot": {
+      "display_name": "Common Root Rot",
+      "type": "disease_fungal",
+      "severity": 0.7,
+      "crop": "wheat",
+      "symptoms": [
+        "Dark brown discoloration of roots and crown",
+        "Premature whitening of heads (whiteheads)",
+        "Stunted plants with poor tillering",
+        "Subcrown internode shows dark brown lesion"
+      ],
+      "color_signatures": [
+        {"name": "brown_stem_base", "h_range": [5, 25], "s_range": [60, 200], "v_range": [40, 140]}
+      ],
+      "texture_keywords": ["brown root", "whitehead", "stunted", "crown rot"],
+      "affected_parts": ["root", "crown", "stem"],
+      "confusion_diseases": ["wheat_fusarium_head_blight"],
+      "treatment": [
+        "Seed treatment with Fludioxonil",
+        "Crop rotation away from cereals"
+      ],
+      "urgency": "within_30_days",
+      "yield_loss_pct": "10-30%",
+      "pathogen": "Bipolaris sorokiniana / Fusarium spp.",
+      "favorable_conditions": "Warm dry soil, drought stress, monoculture"
+    },
+
+    "wheat_aphid": {
+      "display_name": "Aphid Infestation",
+      "type": "pest_insect",
+      "severity": 0.55,
+      "crop": "wheat",
+      "symptoms": [
+        "Clusters of small green, yellow, or black soft-bodied insects on leaves/stems",
+        "Honeydew (sticky shiny secretion) on leaf surfaces",
+        "Sooty mold (black fungal growth) on honeydew deposits",
+        "Curling and yellowing of young leaves",
+        "Stunted plant growth in severe infestations"
+      ],
+      "color_signatures": [
+        {"name": "honeydew_shine", "h_range": [20, 60], "s_range": [10, 60], "v_range": [180, 255]},
+        {"name": "sooty_mold_black", "h_range": [0, 180], "s_range": [0, 50], "v_range": [0, 50]},
+        {"name": "leaf_yellowing", "h_range": [20, 40], "s_range": [60, 200], "v_range": [140, 240]}
+      ],
+      "texture_keywords": ["insect cluster", "sticky", "honeydew", "curling", "sooty mold"],
+      "affected_parts": ["leaf", "stem", "head"],
+      "confusion_diseases": ["wheat_mite", "wheat_powdery_mildew"],
+      "treatment": [
+        "Spray Imidacloprid 17.8 SL @ 0.5ml/L",
+        "Thiamethoxam 25 WG @ 0.5g/L",
+        "Dimethoate 30 EC @ 1.5ml/L",
+        "Encourage natural predators (ladybugs, lacewings)",
+        "Spray neem oil 5% as organic alternative"
+      ],
+      "urgency": "within_7_days",
+      "yield_loss_pct": "5-25%",
+      "pathogen": "Sitobion avenae / Rhopalosiphum padi / Schizaphis graminum",
+      "favorable_conditions": "Cool-warm (15-25°C), dry spells, nitrogen-rich crops attract aphids"
+    },
+
+    "wheat_mite": {
+      "display_name": "Mite Damage",
+      "type": "pest_insect",
+      "severity": 0.5,
+      "crop": "wheat",
+      "symptoms": [
+        "Fine silvery-white stippling/speckling on leaf surface",
+        "Leaves appear bleached or bronzed in severe cases",
+        "Fine webbing visible on leaf undersides (spider mites)",
+        "Leaf edges curl inward",
+        "Overall pale/silvery discoloration of foliage"
+      ],
+      "color_signatures": [
+        {"name": "silvery_stippling", "h_range": [0, 30], "s_range": [0, 40], "v_range": [170, 255]},
+        {"name": "bronzing", "h_range": [10, 25], "s_range": [40, 150], "v_range": [100, 190]}
+      ],
+      "texture_keywords": ["stippling", "silvery", "webbing", "bronzing", "speckling"],
+      "affected_parts": ["leaf"],
+      "confusion_diseases": ["wheat_aphid", "wheat_powdery_mildew"],
+      "treatment": [
+        "Spray Dicofol 18.5 EC @ 2.5ml/L",
+        "Wettable sulfur 80 WP @ 3g/L",
+        "Propargite 57 EC @ 1ml/L",
+        "Maintain field moisture — mites thrive in dry conditions"
+      ],
+      "urgency": "within_7_days",
+      "yield_loss_pct": "3-15%",
+      "pathogen": "Petrobia latens (brown wheat mite) / Aceria tosichella (wheat curl mite)",
+      "favorable_conditions": "Hot (>25°C), dry, drought-stressed crops, dusty conditions"
+    },
+
+    "wheat_stem_fly": {
+      "display_name": "Stem Fly",
+      "type": "pest_insect",
+      "severity": 0.5,
+      "crop": "wheat",
+      "symptoms": [
+        "Dead heart symptom — central shoot dies and turns brown",
+        "Small entry hole at base of stem near soil line",
+        "Internal tunneling visible when stem is split open",
+        "Yellowing of central leaf (deadheart) while outer leaves remain green",
+        "Stunted tillers and reduced plant vigor"
+      ],
+      "color_signatures": [
+        {"name": "dead_heart_brown", "h_range": [10, 30], "s_range": [40, 160], "v_range": [80, 180]},
+        {"name": "central_yellowing", "h_range": [20, 40], "s_range": [60, 200], "v_range": [140, 240]}
+      ],
+      "texture_keywords": ["dead heart", "central shoot", "entry hole", "tunneling", "brown shoot"],
+      "affected_parts": ["stem", "central shoot"],
+      "confusion_diseases": ["wheat_root_rot", "wheat_aphid"],
+      "treatment": [
+        "Seed treatment: Imidacloprid 600 FS @ 5ml/kg seed",
+        "Foliar spray: Chlorantraniliprole 18.5 SC @ 0.3ml/L",
+        "Remove and destroy affected tillers",
+        "Early sowing to escape peak fly activity"
+      ],
+      "urgency": "within_7_days",
+      "yield_loss_pct": "5-30%",
+      "pathogen": "Atherigona naqvii / Melanagromyza spp.",
+      "favorable_conditions": "Warm (20-30°C), late-sown crop, unbalanced nitrogen"
+    },
+
+    "rice_blast": {
+      "display_name": "Rice Blast",
+      "type": "disease_fungal",
+      "severity": 0.9,
+      "crop": "rice",
+      "symptoms": [
+        "Diamond/spindle-shaped lesions with gray center and dark brown margin",
+        "Lesions on leaves, nodes, and panicle neck",
+        "Neck blast causes panicle to break and droop",
+        "White/gray center in leaf lesions"
+      ],
+      "color_signatures": [
+        {"name": "gray_center_lesion", "h_range": [0, 180], "s_range": [0, 50], "v_range": [120, 200]},
+        {"name": "brown_margin", "h_range": [5, 25], "s_range": [80, 200], "v_range": [60, 160]}
+      ],
+      "texture_keywords": ["diamond shaped", "spindle", "gray center", "brown margin"],
+      "affected_parts": ["leaf", "node", "panicle"],
+      "confusion_diseases": ["rice_brown_spot"],
+      "treatment": [
+        "Apply Tricyclazole 75 WP @ 0.6g/L",
+        "Isoprothiolane 40 EC @ 1.5ml/L",
+        "Avoid excess nitrogen fertilization"
+      ],
+      "urgency": "immediate",
+      "yield_loss_pct": "30-100%",
+      "pathogen": "Magnaporthe oryzae",
+      "favorable_conditions": "Warm (25-28°C), humid, prolonged leaf wetness, high nitrogen"
+    },
+
+    "rice_bacterial_blight": {
+      "display_name": "Bacterial Leaf Blight",
+      "type": "disease_bacterial",
+      "severity": 0.8,
+      "crop": "rice",
+      "symptoms": [
+        "Water-soaked lesions starting from leaf tips and margins",
+        "Lesions turn yellow to white as they dry",
+        "Milky or opaque bacterial ooze on leaf surface in morning",
+        "Leaves become straw-colored and dry from margin inward"
+      ],
+      "color_signatures": [
+        {"name": "yellow_margins", "h_range": [20, 40], "s_range": [60, 200], "v_range": [150, 255]},
+        {"name": "straw_colored", "h_range": [18, 35], "s_range": [30, 120], "v_range": [160, 240]}
+      ],
+      "texture_keywords": ["water-soaked", "tip burn", "bacterial ooze", "straw colored"],
+      "affected_parts": ["leaf"],
+      "confusion_diseases": ["rice_leaf_scald"],
+      "treatment": [
+        "Apply Streptocycline 500ppm spray",
+        "Copper oxychloride 50 WP @ 3g/L",
+        "Drain excess water from field"
+      ],
+      "urgency": "immediate",
+      "yield_loss_pct": "20-50%",
+      "pathogen": "Xanthomonas oryzae pv. oryzae",
+      "favorable_conditions": "Warm (25-34°C), rainy, wounds from wind/insects, flooded fields"
+    },
+
+    "rice_brown_spot": {
+      "display_name": "Rice Brown Spot",
+      "type": "disease_fungal",
+      "severity": 0.6,
+      "crop": "rice",
+      "symptoms": [
+        "Oval to circular brown spots on leaves",
+        "Spots have dark brown center with lighter brown margin",
+        "Spots may have yellow halo",
+        "Grains may develop brown/black spots"
+      ],
+      "color_signatures": [
+        {"name": "brown_ovals", "h_range": [8, 25], "s_range": [80, 200], "v_range": [60, 180]}
+      ],
+      "texture_keywords": ["oval spot", "brown center", "yellow halo"],
+      "affected_parts": ["leaf", "grain"],
+      "confusion_diseases": ["rice_blast"],
+      "treatment": [
+        "Spray Mancozeb 75 WP @ 2.5g/L",
+        "Edifenphos 50 EC @ 1ml/L"
+      ],
+      "urgency": "within_7_days",
+      "yield_loss_pct": "10-30%",
+      "pathogen": "Bipolaris oryzae",
+      "favorable_conditions": "High humidity, nutrient-deficient soils, poor drainage"
+    },
+
+    "rice_sheath_blight": {
+      "display_name": "Sheath Blight",
+      "type": "disease_fungal",
+      "severity": 0.7,
+      "crop": "rice",
+      "symptoms": [
+        "Oval/elliptical greenish-gray water-soaked lesions on leaf sheath",
+        "Lesions have dark brown irregular borders",
+        "Lesions may merge and spread to leaves",
+        "White mycelial growth on sheath in humid conditions"
+      ],
+      "color_signatures": [
+        {"name": "gray_green_lesion", "h_range": [30, 80], "s_range": [20, 100], "v_range": [120, 200]}
+      ],
+      "texture_keywords": ["oval lesion", "sheath", "water-soaked", "mycelium"],
+      "affected_parts": ["sheath", "leaf", "stem"],
+      "confusion_diseases": ["rice_bacterial_blight"],
+      "treatment": [
+        "Apply Validamycin 3L @ 2.5ml/L",
+        "Hexaconazole 5 EC @ 2ml/L"
+      ],
+      "urgency": "within_7_days",
+      "yield_loss_pct": "10-30%",
+      "pathogen": "Rhizoctonia solani",
+      "favorable_conditions": "Warm (28-32°C), high humidity, dense planting, high nitrogen"
+    },
+
+    "rice_leaf_scald": {
+      "display_name": "Rice Leaf Scald",
+      "type": "disease_fungal",
+      "severity": 0.65,
+      "crop": "rice",
+      "symptoms": [
+        "Light brown to orange lesions starting from leaf tips",
+        "Alternating light and dark brown banding pattern",
+        "Leaves appear scalded/burned at tips"
+      ],
+      "color_signatures": [
+        {"name": "orange_tip_burn", "h_range": [10, 30], "s_range": [60, 180], "v_range": [120, 220]}
+      ],
+      "texture_keywords": ["scalded", "tip burn", "banding pattern"],
+      "affected_parts": ["leaf"],
+      "confusion_diseases": ["rice_bacterial_blight"],
+      "treatment": [
+        "Use Carbendazim 50 WP @ 1g/L"
+      ],
+      "urgency": "within_7_days",
+      "yield_loss_pct": "5-20%",
+      "pathogen": "Microdochium oryzae",
+      "favorable_conditions": "Cool nights, warm days, frequent rain"
+    }
+  },
+
+  "differential_diagnosis": {
+    "_description": "Pairwise comparison tables: what differentiates Disease A from Disease B. Used by rule engine to explain rejections.",
+
+    "wheat_yellow_rust__vs__wheat_tan_spot": {
+      "disease_a": "wheat_yellow_rust",
+      "disease_b": "wheat_tan_spot",
+      "key_differences": [
+        {"feature": "color_saturation", "a_value": "Vivid bright yellow-orange (high saturation >140)", "b_value": "Dull muted tan-brown (low saturation <140)"},
+        {"feature": "pattern", "a_value": "Linear STRIPES along leaf veins", "b_value": "Discrete CIRCULAR/oval eye-shaped spots"},
+        {"feature": "spatial_arrangement", "a_value": "Parallel to midrib, continuous lines", "b_value": "Scattered randomly, not aligned"},
+        {"feature": "pustule_type", "a_value": "Powdery urediniospore stripes", "b_value": "Necrotic lesion with dark center"},
+        {"feature": "progression", "a_value": "Entire leaf turns yellow", "b_value": "Individual spots may coalesce"}
+      ],
+      "rule": "if vivid_yellow AND stripe_pattern → Yellow Rust; if dull_tan AND circular_spots → Tan Spot"
+    },
+
+    "wheat_yellow_rust__vs__wheat_brown_rust": {
+      "disease_a": "wheat_yellow_rust",
+      "disease_b": "wheat_brown_rust",
+      "key_differences": [
+        {"feature": "color", "a_value": "Yellow to orange", "b_value": "Orange-brown to rusty brown"},
+        {"feature": "pattern", "a_value": "Linear stripes along veins", "b_value": "Scattered circular pustules, random placement"},
+        {"feature": "pustule_size", "a_value": "Small, densely packed in lines", "b_value": "Medium, distinct individual pustules"},
+        {"feature": "temperature_preference", "a_value": "Cool climate (10-15°C)", "b_value": "Moderate climate (15-25°C)"},
+        {"feature": "leaf_surface", "a_value": "Primarily upper surface, both surfaces in severe", "b_value": "Mainly upper surface"}
+      ],
+      "rule": "if stripe_pattern → Yellow Rust; if scattered_round_pustules → Brown Rust; check temperature"
+    },
+
+    "wheat_yellow_rust__vs__wheat_black_rust": {
+      "disease_a": "wheat_yellow_rust",
+      "disease_b": "wheat_black_rust",
+      "key_differences": [
+        {"feature": "color", "a_value": "Bright yellow-orange", "b_value": "Dark reddish-brown to black"},
+        {"feature": "pustule_size", "a_value": "Small, in neat lines", "b_value": "Large, rough, scattered"},
+        {"feature": "affected_part", "a_value": "Mainly leaves", "b_value": "Mainly stems, also leaves"},
+        {"feature": "epidermis", "a_value": "Mildly ruptured", "b_value": "Heavily ruptured/torn"},
+        {"feature": "timing", "a_value": "Early-mid season", "b_value": "Late season"}
+      ],
+      "rule": "if yellow AND stripes → Yellow Rust; if dark_brown AND stem AND torn_epidermis → Black Rust"
+    },
+
+    "wheat_fusarium_head_blight__vs__wheat_blast": {
+      "disease_a": "wheat_fusarium_head_blight",
+      "disease_b": "wheat_blast",
+      "key_differences": [
+        {"feature": "bleaching_pattern", "a_value": "PARTIAL — some spikelets bleached, others green on same head", "b_value": "COMPLETE — entire head bleached above infection point"},
+        {"feature": "spore_color", "a_value": "Pink/orange/salmon sporodochia visible", "b_value": "No colored spores; gray discoloration at rachis"},
+        {"feature": "infection_point", "a_value": "Multiple spikelets, appears random", "b_value": "Single rachis node, clear line of demarcation"},
+        {"feature": "kernel_damage", "a_value": "Shriveled tombstone kernels, DON toxin", "b_value": "Empty/shriveled above break point"},
+        {"feature": "pathogen_origin", "a_value": "Soil-borne, rain-splash", "b_value": "Air-borne, warm humid wind"}
+      ],
+      "rule": "if partial_bleach AND pink_spores → FHB; if complete_bleach AND rachis_lesion → Blast"
+    },
+
+    "wheat_septoria__vs__wheat_tan_spot": {
+      "disease_a": "wheat_septoria",
+      "disease_b": "wheat_tan_spot",
+      "key_differences": [
+        {"feature": "lesion_shape", "a_value": "Irregular blotchy lesions", "b_value": "Lens-shaped/oval eye-spots"},
+        {"feature": "key_marker", "a_value": "Black PYCNIDIA dots inside lesions (diagnostic!)", "b_value": "Dark CENTER spot with YELLOW HALO ring"},
+        {"feature": "lesion_margin", "a_value": "Dark irregular margins", "b_value": "Concentric ring pattern (eye-like)"},
+        {"feature": "progression", "a_value": "Bottom-up (lower leaves first)", "b_value": "Can appear on any leaf level"},
+        {"feature": "tillage_relation", "a_value": "Rain-splash from infected debris", "b_value": "Strong association with no-till / stubble"}
+      ],
+      "rule": "if black_dots_in_lesion → Septoria; if dark_center_yellow_halo → Tan Spot"
+    },
+
+    "wheat_septoria__vs__wheat_leaf_blight": {
+      "disease_a": "wheat_septoria",
+      "disease_b": "wheat_leaf_blight",
+      "key_differences": [
+        {"feature": "key_marker", "a_value": "Tiny black pycnidia dots in lesions", "b_value": "No pycnidia; uniform brown-yellow lesion"},
+        {"feature": "lesion_size", "a_value": "Small to medium irregular", "b_value": "Large, expanding, water-soaked"},
+        {"feature": "lesion_color", "a_value": "Tan with dark margins", "b_value": "Brown with distinct yellow halo"},
+        {"feature": "progression", "a_value": "Slow, bottom-up", "b_value": "Rapid, can appear anywhere"}
+      ],
+      "rule": "if pycnidia_visible → Septoria; if large_water_soaked_yellow_halo → Leaf Blight"
+    },
+
+    "wheat_aphid__vs__wheat_mite": {
+      "disease_a": "wheat_aphid",
+      "disease_b": "wheat_mite",
+      "key_differences": [
+        {"feature": "visible_organisms", "a_value": "Visible green/black soft-bodied insect clusters", "b_value": "Barely visible to naked eye; look for webbing"},
+        {"feature": "leaf_damage", "a_value": "Curling, honeydew (sticky shiny), sooty mold", "b_value": "Silvery stippling/speckling, bronzing"},
+        {"feature": "secretion", "a_value": "Sticky honeydew on surface", "b_value": "Fine silk webbing on underside"},
+        {"feature": "preferred_conditions", "a_value": "Cool-moderate, nitrogen-rich", "b_value": "Hot, dry, drought-stressed"},
+        {"feature": "affected_area", "a_value": "Clustered on shoots/heads", "b_value": "Spread across entire leaf surface"}
+      ],
+      "rule": "if sticky_honeydew AND insect_clusters → Aphid; if silvery_stippling AND webbing → Mite"
+    },
+
+    "rice_blast__vs__rice_brown_spot": {
+      "disease_a": "rice_blast",
+      "disease_b": "rice_brown_spot",
+      "key_differences": [
+        {"feature": "lesion_shape", "a_value": "Diamond/spindle-shaped with pointed ends", "b_value": "Circular/oval with rounded edges"},
+        {"feature": "center_color", "a_value": "Gray/white center", "b_value": "Dark brown center"},
+        {"feature": "margin", "a_value": "Dark brown sharp margin", "b_value": "Lighter brown diffuse margin"},
+        {"feature": "panicle_damage", "a_value": "Neck blast — panicle breaks/droops", "b_value": "Grain spots possible, no neck breaking"},
+        {"feature": "severity", "a_value": "Devastating, can destroy entire field", "b_value": "Moderate, mainly cosmetic in mild cases"}
+      ],
+      "rule": "if diamond_shape AND gray_center → Rice Blast; if round_shape AND brown_center → Brown Spot"
+    },
+
+    "rice_bacterial_blight__vs__rice_leaf_scald": {
+      "disease_a": "rice_bacterial_blight",
+      "disease_b": "rice_leaf_scald",
+      "key_differences": [
+        {"feature": "lesion_start", "a_value": "From leaf tips AND margins inward", "b_value": "Mainly from leaf tips downward"},
+        {"feature": "key_marker", "a_value": "Milky bacterial OOZE visible in morning", "b_value": "Alternating light-dark BANDING pattern"},
+        {"feature": "leaf_color", "a_value": "Yellow → white → straw-colored", "b_value": "Light brown → orange, scalded look"},
+        {"feature": "pathogen_type", "a_value": "BACTERIAL (no fungicide works)", "b_value": "FUNGAL (fungicides effective)"},
+        {"feature": "water_relation", "a_value": "Worse in flooded fields, storms", "b_value": "Rain-related but not flood-dependent"}
+      ],
+      "rule": "if bacterial_ooze AND tip_margin_burn → Bacterial Blight; if banding_pattern AND scalded_tips → Leaf Scald"
+    },
+
+    "wheat_powdery_mildew__vs__healthy_wheat": {
+      "disease_a": "wheat_powdery_mildew",
+      "disease_b": "healthy_wheat",
+      "key_differences": [
+        {"feature": "surface_coating", "a_value": "White/gray powdery fungal growth on surface", "b_value": "Clean green surface, no coating"},
+        {"feature": "texture", "a_value": "Fuzzy/powdery when touched", "b_value": "Smooth, waxy leaf surface"},
+        {"feature": "color_under_coating", "a_value": "Yellowing tissue beneath mildew", "b_value": "Uniform green throughout"}
+      ],
+      "rule": "if white_powdery_coating → Powdery Mildew; if clean_green → Healthy"
+    }
+  },
+
+  "seasonal_context": {
+    "_description": "Disease likelihood by crop growth stage and season. Used to adjust confidence scores based on timing.",
+
+    "wheat": {
+      "sowing_to_tillering": {
+        "months": ["October", "November", "December"],
+        "temperature_range_c": [15, 25],
+        "high_risk": ["wheat_root_rot", "wheat_smut", "wheat_stem_fly"],
+        "moderate_risk": ["wheat_aphid"],
+        "low_risk": ["wheat_yellow_rust", "wheat_powdery_mildew"],
+        "unlikely": ["wheat_fusarium_head_blight", "wheat_blast"]
+      },
+      "tillering_to_jointing": {
+        "months": ["December", "January"],
+        "temperature_range_c": [8, 20],
+        "high_risk": ["wheat_yellow_rust", "wheat_powdery_mildew", "wheat_aphid"],
+        "moderate_risk": ["wheat_brown_rust", "wheat_septoria", "wheat_leaf_blight"],
+        "low_risk": ["wheat_tan_spot", "wheat_mite"],
+        "unlikely": ["wheat_fusarium_head_blight", "wheat_blast", "wheat_smut"]
+      },
+      "jointing_to_heading": {
+        "months": ["January", "February"],
+        "temperature_range_c": [12, 25],
+        "high_risk": ["wheat_yellow_rust", "wheat_brown_rust", "wheat_septoria", "wheat_tan_spot"],
+        "moderate_risk": ["wheat_black_rust", "wheat_powdery_mildew", "wheat_leaf_blight"],
+        "low_risk": ["wheat_aphid", "wheat_mite"],
+        "unlikely": ["wheat_root_rot", "wheat_smut", "wheat_stem_fly"]
+      },
+      "heading_to_flowering": {
+        "months": ["February", "March"],
+        "temperature_range_c": [15, 30],
+        "high_risk": ["wheat_fusarium_head_blight", "wheat_black_rust", "wheat_yellow_rust", "wheat_blast"],
+        "moderate_risk": ["wheat_brown_rust", "wheat_tan_spot", "wheat_septoria"],
+        "low_risk": ["wheat_aphid", "wheat_mite"],
+        "unlikely": ["wheat_root_rot", "wheat_smut", "wheat_stem_fly"]
+      },
+      "grain_filling_to_maturity": {
+        "months": ["March", "April"],
+        "temperature_range_c": [20, 35],
+        "high_risk": ["wheat_black_rust", "wheat_fusarium_head_blight", "wheat_mite"],
+        "moderate_risk": ["wheat_brown_rust", "wheat_leaf_blight"],
+        "low_risk": ["wheat_yellow_rust", "wheat_tan_spot"],
+        "unlikely": ["wheat_powdery_mildew", "wheat_root_rot", "wheat_smut", "wheat_stem_fly"]
+      }
+    },
+
+    "rice": {
+      "nursery_to_transplanting": {
+        "months": ["June", "July"],
+        "temperature_range_c": [25, 35],
+        "high_risk": ["rice_blast", "rice_bacterial_blight"],
+        "moderate_risk": ["rice_brown_spot"],
+        "low_risk": ["rice_sheath_blight", "rice_leaf_scald"],
+        "unlikely": []
+      },
+      "vegetative_tillering": {
+        "months": ["July", "August"],
+        "temperature_range_c": [28, 35],
+        "high_risk": ["rice_bacterial_blight", "rice_blast", "rice_sheath_blight"],
+        "moderate_risk": ["rice_brown_spot", "rice_leaf_scald"],
+        "low_risk": [],
+        "unlikely": []
+      },
+      "booting_to_heading": {
+        "months": ["August", "September"],
+        "temperature_range_c": [25, 33],
+        "high_risk": ["rice_blast", "rice_sheath_blight"],
+        "moderate_risk": ["rice_bacterial_blight", "rice_brown_spot"],
+        "low_risk": ["rice_leaf_scald"],
+        "unlikely": []
+      },
+      "grain_filling_to_maturity": {
+        "months": ["September", "October", "November"],
+        "temperature_range_c": [22, 32],
+        "high_risk": ["rice_sheath_blight", "rice_brown_spot"],
+        "moderate_risk": ["rice_blast", "rice_bacterial_blight"],
+        "low_risk": ["rice_leaf_scald"],
+        "unlikely": []
+      }
+    }
+  }
+}

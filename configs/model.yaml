@@ -1,0 +1,68 @@
+---
+# Vision Model Configuration
+
+model:
+  type: yolov8
+  backbone: yolov8n  # nano for edge deployment
+  pretrained: true
+  checkpoint: models/yolov8n-seg.pt
+
+task:
+  type: instance_segmentation
+  num_classes: 14
+  region: india_north  # Punjab / Haryana / UP wheat-rice belt
+  classes:
+    # Wheat classes (0-6)
+    - healthy_wheat
+    - wheat_lodging
+    - wheat_leaf_rust
+    - wheat_yellow_rust
+    - wheat_powdery_mildew
+    - wheat_nitrogen_def
+    - wheat_weed
+    # Rice classes (7-13)
+    - healthy_rice
+    - rice_blast
+    - rice_brown_planthopper
+    - rice_water_stress
+    - rice_weed
+    - poor_row_spacing
+    - good_row_spacing
+  categories:
+    health: [healthy_wheat, healthy_rice, good_row_spacing]
+    lodging: [wheat_lodging]
+    weed: [wheat_weed, rice_weed]
+    disease: [wheat_leaf_rust, wheat_yellow_rust, wheat_powdery_mildew, rice_blast, rice_brown_planthopper]
+    nutrient: [wheat_nitrogen_def]
+    stress: [rice_water_stress]
+    stand: [poor_row_spacing]
+  crop_mapping:
+    wheat: [healthy_wheat, wheat_lodging, wheat_leaf_rust, wheat_yellow_rust, wheat_powdery_mildew, wheat_nitrogen_def, wheat_weed]
+    rice: [healthy_rice, rice_blast, rice_brown_planthopper, rice_water_stress, rice_weed, poor_row_spacing, good_row_spacing]
+
+training:
+  device: cuda
+  epochs: 100
+  batch_size: 16
+  learning_rate: 0.001
+  optimizer: SGD
+  patience: 20
+  save_best: true
+
+inference:
+  confidence_threshold: 0.5
+  iou_threshold: 0.45
+  device: cuda
+  batch_size: 8
+  half_precision: true
+
+postprocessing:
+  merge_overlapping: true
+  min_confidence: 0.4
+  min_area_px: 100
+  smooth_contours: true
+
+uncertainty:
+  estimate_enabled: false
+  method: dropout  # Monte Carlo dropout estimation
+  num_passes: 5

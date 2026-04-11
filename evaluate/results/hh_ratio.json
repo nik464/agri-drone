@@ -1,0 +1,73 @@
+{
+  "n_samples": 21,
+  "config_b_accuracy": 0.7143,
+  "config_c_accuracy": 0.7619,
+  "accuracy_delta": 0.0476,
+  "config_b_macro_f1": 0.6381,
+  "config_c_macro_f1": 0.6984,
+  "macro_f1_delta": 0.0603,
+  "corrected": 4,
+  "broken": 3,
+  "both_correct": 12,
+  "both_wrong": 2,
+  "help_to_harm_ratio": 1.3333,
+  "net_improvement": 1,
+  "fn_reduction_critical": {
+    "total_fn_config_b": 1,
+    "total_fn_config_c": 2,
+    "total_fn_reduction": -1,
+    "reduction_pct": -100.0,
+    "per_disease": {
+      "rice_bacterial_blight": {
+        "fn_config_b": 0,
+        "fn_config_c": 0,
+        "fn_reduction": 0,
+        "support": 1,
+        "recall_b": 1.0,
+        "recall_c": 1.0
+      },
+      "rice_blast": {
+        "fn_config_b": 0,
+        "fn_config_c": 1,
+        "fn_reduction": -1,
+        "support": 1,
+        "recall_b": 1.0,
+        "recall_c": 0.0
+      },
+      "wheat_black_rust": {
+        "fn_config_b": 0,
+        "fn_config_c": 0,
+        "fn_reduction": 0,
+        "support": 1,
+        "recall_b": 1.0,
+        "recall_c": 1.0
+      },
+      "wheat_blast": {
+        "fn_config_b": 1,
+        "fn_config_c": 1,
+        "fn_reduction": 0,
+        "support": 1,
+        "recall_b": 0.0,
+        "recall_c": 0.0
+      },
+      "wheat_fusarium_head_blight": {
+        "fn_config_b": 0,
+        "fn_config_c": 0,
+        "fn_reduction": 0,
+        "support": 1,
+        "recall_b": 1.0,
+        "recall_c": 1.0
+      },
+      "wheat_yellow_rust": {
+        "fn_config_b": 0,
+        "fn_config_c": 0,
+        "fn_reduction": 0,
+        "support": 1,
+        "recall_b": 1.0,
+        "recall_c": 1.0
+      }
+    }
+  },
+  "mean_llava_latency_ms": 0,
+  "conclusion": "LLaVA adds value (H:H > 1, net positive)"
+}

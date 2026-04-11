@@ -1,0 +1,40 @@
+\begin{table*}[t]
+\centering
+\caption{Three-configuration ablation study on the 21-class AgriDrone test set ($n=934$). RWA = Risk-Weighted Accuracy with tier weights $\tau_{\text{crit}}=10, \tau_{\text{high}}=5, \tau_{\text{mod}}=2, \tau_{\text{healthy}}=1$. Best per-class F1 in \textbf{bold}.}
+\label{tab:ablation}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{l c | r r r | r r r | r}
+\toprule
+& & \multicolumn{3}{c|}{\textbf{Config A (YOLO)}} & \multicolumn{3}{c|}{\textbf{Config B (YOLO+Rules)}} & \\
+\textbf{Disease} & \textbf{Tier} & P & R & F1 & P & R & F1 & $\Delta$F1 \\
+\midrule
+  healthy\_rice & heal & 1.00 & 1.00 & 1.00 & 1.00 & 1.00 & \textbf{1.00} & +0.00 \\
+  healthy\_wheat & heal & 0.96 & 0.96 & 0.96 & 0.96 & 0.96 & \textbf{0.96} & +0.00 \\
+  rice\_bacterial\_blight & crit & 0.98 & 1.00 & 0.99 & 0.98 & 1.00 & \textbf{0.99} & +0.00 \\
+  rice\_blast & crit & 0.94 & 0.98 & 0.96 & 0.94 & 0.98 & \textbf{0.96} & +0.00 \\
+  rice\_brown\_spot & mode & 1.00 & 1.00 & 1.00 & 1.00 & 1.00 & \textbf{1.00} & +0.00 \\
+  rice\_leaf\_scald & high & 1.00 & 0.93 & 0.97 & 1.00 & 0.93 & \textbf{0.97} & +0.00 \\
+  rice\_sheath\_blight & high & 1.00 & 1.00 & 1.00 & 1.00 & 1.00 & \textbf{1.00} & +0.00 \\
+  wheat\_aphid & mode & 0.98 & 0.93 & \textbf{0.95} & 0.98 & 0.91 & 0.94 & -0.01 \\
+  wheat\_black\_rust & crit & 0.88 & 0.93 & \textbf{0.90} & 0.84 & 0.93 & 0.88 & -0.02 \\
+  wheat\_blast & crit & 0.96 & 0.96 & 0.96 & 0.98 & 0.96 & \textbf{0.97} & +0.01 \\
+  wheat\_brown\_rust & high & 0.93 & 0.84 & 0.88 & 0.93 & 0.84 & \textbf{0.88} & +0.00 \\
+  wheat\_fusarium\_head\_blight & crit & 1.00 & 0.98 & 0.99 & 1.00 & 0.98 & \textbf{0.99} & +0.00 \\
+  wheat\_leaf\_blight & high & 0.85 & 0.91 & 0.88 & 0.87 & 0.91 & \textbf{0.89} & +0.01 \\
+  wheat\_mite & mode & 0.96 & 1.00 & \textbf{0.98} & 0.94 & 1.00 & 0.97 & -0.01 \\
+  wheat\_powdery\_mildew & mode & 1.00 & 1.00 & \textbf{1.00} & 0.98 & 1.00 & 0.99 & -0.01 \\
+  wheat\_root\_rot & high & 0.98 & 0.96 & 0.97 & 0.98 & 0.96 & \textbf{0.97} & +0.00 \\
+  wheat\_septoria & high & 1.00 & 0.98 & 0.99 & 1.00 & 0.98 & \textbf{0.99} & +0.00 \\
+  wheat\_smut & mode & 0.96 & 0.98 & 0.97 & 0.96 & 0.98 & \textbf{0.97} & +0.00 \\
+  wheat\_stem\_fly & mode & 0.97 & 1.00 & 0.99 & 0.97 & 1.00 & \textbf{0.99} & +0.00 \\
+  wheat\_tan\_spot & mode & 0.89 & 0.89 & \textbf{0.89} & 0.88 & 0.82 & 0.85 & -0.04 \\
+  wheat\_yellow\_rust & crit & 1.00 & 0.98 & \textbf{0.99} & 0.96 & 0.98 & 0.97 & -0.02 \\
+\midrule
+  \textbf{Macro} & & 0.96 & 0.96 & 0.96 & 0.96 & 0.96 & 0.96 & -0.00 \\
+\midrule
+  \textbf{Accuracy} & & \multicolumn{3}{c|}{96.2\%} & \multicolumn{3}{c|}{95.7\%} & -0.4pp \\
+  \textbf{RWA} & & \multicolumn{3}{c|}{96.1\%} & \multicolumn{3}{c|}{95.9\%} & -0.2pp \\
+  \textbf{Safety Gap} & & \multicolumn{3}{c|}{0.0pp} & \multicolumn{3}{c|}{-0.2pp} & \\
+\bottomrule
+\end{tabular}}
+\end{table*}

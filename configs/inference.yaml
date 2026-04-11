@@ -1,0 +1,43 @@
+---
+# Inference Configuration
+
+inference:
+  mode: production  # development | production | diagnostic
+
+  input:
+    source: image_file  # image_file | directory | rtsp_stream | usb_camera
+    input_path: data/sample/
+    recursive: true
+
+  preprocessing:
+    input_size: 640
+    padding_mode: letterbox
+    normalize: true
+
+  execution:
+    device: cuda  # cuda | cpu | mps
+    num_workers: 4
+    pin_memory: true
+    prefetch_factor: 2
+
+  batch_processing:
+    enabled: true
+    batch_size: 8
+    prefetch_batches: 2
+
+  postprocessing:
+    nms_enabled: true
+    nms_threshold: 0.45
+    confidence_threshold: 0.5
+    adaptive_threshold: false
+
+  output:
+    save_detections: true
+    save_visualizations: true
+    detections_format: json  # json | csv | arrow
+    viz_format: png
+    output_dir: outputs/inference
+
+  performance:
+    log_timing: true
+    target_fps: 0

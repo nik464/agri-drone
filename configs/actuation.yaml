@@ -1,0 +1,40 @@
+---
+# Actuation Configuration
+
+actuation:
+  safety:
+    dry_run: true  # Disable all physical actuation if True
+    test_fluid_only: true  # Only allow water/test fluid
+    require_human_review: true
+    fail_safe: true  # Always default to safe/off state
+
+  hardware:
+    type: raspberry_pi  # raspberry_pi | arduino | mock
+    pump:
+      pin: 17
+      default_rate: 0.5  # 0.0-1.0
+      max_duty_cycle: 0.8
+    valve:
+      pin: 27
+      normally_open: false
+    safety_pin: 22  # Interrupt pin for emergency stop
+
+  timing:
+    warmup_seconds: 2
+    cooldown_seconds: 5
+    max_spray_duration_seconds: 300
+
+  nozzle:
+    type: standard_flat_fan
+    spray_height_m: 2.0
+    tip_size_ml_min: 40
+    pressure_bar: 3.0
+    width_m: 4.0
+
+  calibration:
+    flow_rate_ml_per_min: 500
+    coverage_percent: 95
+
+  logging:
+    log_all_actuation: true
+    include_telemetry: true

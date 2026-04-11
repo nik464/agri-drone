@@ -1,0 +1,45 @@
+---
+# Prescription Engine Configuration
+
+prescription:
+  algorithm: rule_based  # rule_based | constrained_optimization | reinforcement_learning
+
+  severity_scoring:
+    confidence_weight: 0.6
+    area_weight: 0.2
+    density_weight: 0.2
+
+  thresholds:
+    high_severity: 0.7
+    medium_severity: 0.4
+    low_severity: 0.1
+    no_treatment: 0.05
+
+  spray_rates:
+    high: 1.0      # 100% flow
+    medium: 0.5    # 50% flow
+    low: 0.2       # 20% flow
+    none: 0.0      # No spray
+
+  grid:
+    cell_size_m: 10
+    overlap_percent: 0
+
+  environmental_modifiers:
+    temperature:
+      factor: 1.0  # Multiplier on severity
+      optimal_range: [18, 28]  # degrees C
+    humidity:
+      factor: 0.9
+      optimal_range: [50, 80]  # percent
+
+  output:
+    include_reason_codes: true
+    include_confidence: true
+    include_uncertainty: false
+
+  export_formats:
+    - geojson
+    - shapefile
+    - csv
+    - tiff
