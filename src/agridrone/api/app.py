@@ -1761,6 +1761,153 @@ def create_app() -> FastAPI:
         return artifacts
 
     # ============================================================
+    # Dataset Collector
+    # ============================================================
+    def _datasets_root() -> Path:
+        project_root = Path(__file__).resolve().parent.parent.parent.parent
+        return project_root / "datasets"
+
+    def _user_uploads_root() -> Path:
+        root = _datasets_root() / "user_uploads"
+        root.mkdir(parents=True, exist_ok=True)
+        return root
+
+    def _sanitize_class_name(name: str) -> str:
+        name = (name or "").strip()
+        safe = "".join(c if c.isalnum() or c in "-_" else "_" for c in name)[:64]
+        return safe or "unlabeled"
+
+    @app.get("/api/dataset/stats")
+    async def dataset_stats():
+        """Summarize every ImageFolder dataset under ``datasets/``.
+
+        Walks ``datasets/externals/`` (one level deep) and ``datasets/user_uploads/``,
+        counting JPEG/PNG files per class-folder. Safe on empty installs.
+        """
+        root = _datasets_root()
+        IMG_EXTS = {".jpg", ".jpeg", ".png", ".bmp", ".webp"}
+
+        def _summarize(folder: Path) -> dict:
+            classes = []
+            total_images = 0
+            total_bytes = 0
+            if not folder.is_dir():
+                return {"classes": [], "total_images": 0, "total_bytes": 0}
+            for cls in sorted(folder.iterdir()):
+                if not cls.is_dir():
+                    continue
+                imgs = [p for p in cls.iterdir() if p.suffix.lower() in IMG_EXTS]
+                if not imgs:
+                    continue
+                n = len(imgs)
+                size = sum(p.stat().st_size for p in imgs)
+                classes.append({"name": cls.name, "n_images": n,
+                                "size_mb": round(size / (1024 * 1024), 2)})
+                total_images += n
+                total_bytes += size
+            return {"classes": classes, "total_images": total_images,
+                    "total_bytes": total_bytes}
+
+        datasets_info: list[dict] = []
+
+        # user uploads (always listed even if empty so UI can render upload target)
+        uploads = _summarize(_user_uploads_root())
+        datasets_info.append({
+            "name": "user_uploads",
+            "path": "datasets/user_uploads",
+            "writable": True,
+            **uploads,
+        })
+
+        externals = root / "externals"
+        if externals.is_dir():
+            for ds in sorted(externals.iterdir()):
+                if not ds.is_dir():
+                    continue
+                # Handle the PlantVillage "color/" nested-folder layout.
+                color_sub = ds / "color"
+                target = color_sub if color_sub.is_dir() else ds
+                info = _summarize(target)
+                if not info["classes"]:
+                    # May be one-level deeper (e.g. plantvillage dataset/color/).
+                    for nested in ds.iterdir():
+                        if nested.is_dir():
+                            sub = _summarize(nested)
+                            if sub["classes"]:
+                                info = sub
+                                target = nested
+                                break
+                if info["classes"]:
+                    datasets_info.append({
+                        "name": ds.name,
+                        "path": str(target.relative_to(root.parent)).replace("\\", "/"),
+                        "writable": False,
+                        **info,
+                    })
+
+        return {
+            "root": str(root),
+            "datasets": datasets_info,
+            "uploads_dir": str(_user_uploads_root()),
+        }
+
+    @app.post("/api/dataset/upload")
+    async def dataset_upload(
+        class_name: str = Form(...),
+        files: List[UploadFile] = File(...),
+    ):
+        """Append user-labeled images to ``datasets/user_uploads/<class_name>/``.
+
+        Idempotent per filename (overwrites). Rejects non-image content types.
+        Returns the updated per-class count so the UI can refresh without a
+        second round-trip.
+        """
+        safe_cls = _sanitize_class_name(class_name)
+        dest = _user_uploads_root() / safe_cls
+        dest.mkdir(parents=True, exist_ok=True)
+
+        saved = []
+        skipped = []
+        for up in files:
+            ctype = (up.content_type or "").lower()
+            if not ctype.startswith("image/"):
+                skipped.append({"name": up.filename, "reason": f"not an image ({ctype})"})
+                continue
+            # sanitize filename
+            base = os.path.basename(up.filename or "upload.jpg")
+            base = "".join(c if c.isalnum() or c in "-_." else "_" for c in base)[:120]
+            target = dest / base
+            try:
+                content = await up.read()
+                if not content:
+                    skipped.append({"name": base, "reason": "empty file"})
+                    continue
+                target.write_bytes(content)
+                saved.append({"name": base, "bytes": len(content)})
+            except Exception as e:
+                skipped.append({"name": base, "reason": f"{type(e).__name__}: {e}"})
+
+        n_total = sum(1 for p in dest.iterdir() if p.suffix.lower()
+                      in {".jpg", ".jpeg", ".png", ".bmp", ".webp"})
+        return {
+            "class": safe_cls,
+            "saved": saved,
+            "skipped": skipped,
+            "total_in_class": n_total,
+        }
+
+    @app.delete("/api/dataset/class/{class_name}")
+    async def dataset_delete_class(class_name: str):
+        """Delete all images in ``user_uploads/<class_name>/`` (irreversible)."""
+        safe_cls = _sanitize_class_name(class_name)
+        target = _user_uploads_root() / safe_cls
+        if not target.is_dir():
+            raise HTTPException(status_code=404, detail=f"class '{safe_cls}' not found")
+        import shutil as _sh
+        _sh.rmtree(target, ignore_errors=True)
+        return {"deleted": safe_cls}
+
+    # ============================================================
     # Model Reload
     # ============================================================
     @app.post("/api/model/reload")
