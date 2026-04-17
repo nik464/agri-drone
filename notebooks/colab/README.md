@@ -9,9 +9,9 @@ Three notebooks live in this folder; click the badges to open them in Colab.
 
 | # | Notebook | Badge | Estimated runtime |
 |---|----------|-------|-------------------|
-| 1 | Experimental matrix | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Ashut0sh-mishra/agri-drone/blob/research-upgrade/notebooks/colab/01_run_matrix.ipynb) | T4 ≈ 2 h (quick) · A100 ≈ 12 h (full) |
-| 2 | PDT calibration + few-shot | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Ashut0sh-mishra/agri-drone/blob/research-upgrade/notebooks/colab/02_pdt_calibration.ipynb) | T4 ≈ 45 min |
-| 3 | Fair multi-backbone baselines | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Ashut0sh-mishra/agri-drone/blob/research-upgrade/notebooks/colab/03_baseline_reaudit.ipynb) | T4 ≈ 2.5 h |
+| 1 | Experimental matrix | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Ashut0sh-mishra/agri-drone/blob/main/notebooks/colab/01_run_matrix.ipynb) | T4 ≈ 2 h (quick) · A100 ≈ 12 h (full) |
+| 2 | PDT calibration + few-shot | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Ashut0sh-mishra/agri-drone/blob/main/notebooks/colab/02_pdt_calibration.ipynb) | T4 ≈ 45 min |
+| 3 | Fair multi-backbone baselines | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Ashut0sh-mishra/agri-drone/blob/main/notebooks/colab/03_baseline_reaudit.ipynb) | T4 ≈ 2.5 h |
 
 ## Prerequisites (10 minutes)
 
@@ -72,7 +72,7 @@ Three notebooks live in this folder; click the badges to open them in Colab.
   `MyDrive/agri-drone/models_v2/` only.
 - Do **not** modify `RESEARCH_PAPER_FINAL_v3.md` or any file under
   `evaluate/results/*.json` (both are frozen by regression tests).
-- Do **not** force-push or rewrite history on `research-upgrade`.
+- Do **not** force-push or rewrite history on `main`.
 
 ## Expected cost
 
@@ -87,13 +87,14 @@ The results (JSON + Markdown) are small and safe to commit:
 ```powershell
 # on your local machine, after downloading the zip from Drive
 cd D:\Projects\agri-drone
-git checkout research-upgrade
+git checkout main
+git pull origin main
+git checkout -b results/v2-$(Get-Date -Format yyyyMMdd)
 # unzip the Colab output into evaluate/results/v2/
 Expand-Archive -Path results_v2_<timestamp>.zip -DestinationPath evaluate/results/v2/ -Force
 git add evaluate/results/v2/
 git commit -m "results(v2): add Colab-generated matrix/PDT/baseline artifacts"
-git push origin research-upgrade
+git push -u origin HEAD
 ```
 
-Open the PR at
-<https://github.com/Ashut0sh-mishra/agri-drone/pull/new/research-upgrade>.
+Then open a PR via the URL that `git push` prints.
