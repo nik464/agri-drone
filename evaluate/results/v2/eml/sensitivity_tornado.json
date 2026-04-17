@@ -1,0 +1,179 @@
+{
+  "headline_eml_inr_per_ha": 317.89,
+  "sweeps": [
+    -0.5,
+    -0.25,
+    0.25,
+    0.5
+  ],
+  "entries": [
+    {
+      "disease": "wheat_blast",
+      "pct": -0.5,
+      "perturbed_eml_inr": 294.33,
+      "delta_from_headline": -23.56
+    },
+    {
+      "disease": "wheat_blast",
+      "pct": -0.25,
+      "perturbed_eml_inr": 306.11,
+      "delta_from_headline": -11.78
+    },
+    {
+      "disease": "wheat_blast",
+      "pct": 0.25,
+      "perturbed_eml_inr": 329.67,
+      "delta_from_headline": 11.78
+    },
+    {
+      "disease": "wheat_blast",
+      "pct": 0.5,
+      "perturbed_eml_inr": 341.44,
+      "delta_from_headline": 23.55
+    },
+    {
+      "disease": "wheat_fusarium_head_blight",
+      "pct": -0.5,
+      "perturbed_eml_inr": 308.65,
+      "delta_from_headline": -9.24
+    },
+    {
+      "disease": "wheat_fusarium_head_blight",
+      "pct": -0.25,
+      "perturbed_eml_inr": 313.27,
+      "delta_from_headline": -4.62
+    },
+    {
+      "disease": "wheat_fusarium_head_blight",
+      "pct": 0.25,
+      "perturbed_eml_inr": 322.51,
+      "delta_from_headline": 4.62
+    },
+    {
+      "disease": "wheat_fusarium_head_blight",
+      "pct": 0.5,
+      "perturbed_eml_inr": 327.12,
+      "delta_from_headline": 9.23
+    },
+    {
+      "disease": "wheat_black_rust",
+      "pct": -0.5,
+      "perturbed_eml_inr": 288.18,
+      "delta_from_headline": -29.71
+    },
+    {
+      "disease": "wheat_black_rust",
+      "pct": -0.25,
+      "perturbed_eml_inr": 303.03,
+      "delta_from_headline": -14.86
+    },
+    {
+      "disease": "wheat_black_rust",
+      "pct": 0.25,
+      "perturbed_eml_inr": 332.74,
+      "delta_from_headline": 14.85
+    },
+    {
+      "disease": "wheat_black_rust",
+      "pct": 0.5,
+      "perturbed_eml_inr": 347.6,
+      "delta_from_headline": 29.71
+    },
+    {
+      "disease": "wheat_yellow_rust",
+      "pct": -0.5,
+      "perturbed_eml_inr": 308.79,
+      "delta_from_headline": -9.1
+    },
+    {
+      "disease": "wheat_yellow_rust",
+      "pct": -0.25,
+      "perturbed_eml_inr": 313.34,
+      "delta_from_headline": -4.55
+    },
+    {
+      "disease": "wheat_yellow_rust",
+      "pct": 0.25,
+      "perturbed_eml_inr": 322.44,
+      "delta_from_headline": 4.55
+    },
+    {
+      "disease": "wheat_yellow_rust",
+      "pct": 0.5,
+      "perturbed_eml_inr": 326.99,
+      "delta_from_headline": 9.1
+    },
+    {
+      "disease": "rice_blast",
+      "pct": -0.5,
+      "perturbed_eml_inr": 306.11,
+      "delta_from_headline": -11.78
+    },
+    {
+      "disease": "rice_blast",
+      "pct": -0.25,
+      "perturbed_eml_inr": 312.0,
+      "delta_from_headline": -5.89
+    },
+    {
+      "disease": "rice_blast",
+      "pct": 0.25,
+      "perturbed_eml_inr": 323.78,
+      "delta_from_headline": 5.89
+    },
+    {
+      "disease": "rice_blast",
+      "pct": 0.5,
+      "perturbed_eml_inr": 329.67,
+      "delta_from_headline": 11.78
+    },
+    {
+      "disease": "rice_bacterial_blight",
+      "pct": -0.5,
+      "perturbed_eml_inr": 317.89,
+      "delta_from_headline": 0.0
+    },
+    {
+      "disease": "rice_bacterial_blight",
+      "pct": -0.25,
+      "perturbed_eml_inr": 317.89,
+      "delta_from_headline": 0.0
+    },
+    {
+      "disease": "rice_bacterial_blight",
+      "pct": 0.25,
+      "perturbed_eml_inr": 317.89,
+      "delta_from_headline": 0.0
+    },
+    {
+      "disease": "rice_bacterial_blight",
+      "pct": 0.5,
+      "perturbed_eml_inr": 317.89,
+      "delta_from_headline": 0.0
+    },
+    {
+      "disease": "rice_brown_spot",
+      "pct": -0.5,
+      "perturbed_eml_inr": 317.89,
+      "delta_from_headline": 0.0
+    },
+    {
+      "disease": "rice_brown_spot",
+      "pct": -0.25,
+      "perturbed_eml_inr": 317.89,
+      "delta_from_headline": 0.0
+    },
+    {
+      "disease": "rice_brown_spot",
+      "pct": 0.25,
+      "perturbed_eml_inr": 317.89,
+      "delta_from_headline": 0.0
+    },
+    {
+      "disease": "rice_brown_spot",
+      "pct": 0.5,
+      "perturbed_eml_inr": 317.89,
+      "delta_from_headline": 0.0
+    }
+  ]
+}

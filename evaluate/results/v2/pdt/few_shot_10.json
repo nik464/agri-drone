@@ -1,0 +1,7 @@
+{
+  "status": "skipped",
+  "variant": "few_shot",
+  "shots_per_class": 10,
+  "notes": "Fine-tune on 10/class requires a GPU. Expected run on GPU host: ~5 min for 10 epochs on MobileNetV3-Small head. Write result to evaluate/results/v2/pdt/few_shot_10.json.",
+  "suggested_command": "python evaluate/pdt_v2.py --variant few_shot --shots 10 --pdt-dir 'datasets/externals/PDT_datasets/PDT dataset/PDT dataset'"
+}

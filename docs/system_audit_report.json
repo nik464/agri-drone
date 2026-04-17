@@ -1,0 +1,55 @@
+{
+  "generated_at": "2026-04-17T09:41:35.853419Z",
+  "os": {
+    "system": "Windows",
+    "release": "10",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "machine": "AMD64"
+  },
+  "python": {
+    "version": "3.11.7",
+    "executable": "C:\\Users\\ASHUTOSH MISHRA\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+    "venv": false
+  },
+  "git": {
+    "branch": "research-upgrade",
+    "head": "7547da3",
+    "dirty_lines": 7,
+    "commits_ahead_of_main": "11"
+  },
+  "gpu": {
+    "present": false,
+    "summary": "nvidia-smi not on PATH"
+  },
+  "torch": {
+    "version": "2.4.1+cpu",
+    "cuda_available": false,
+    "cuda_device_count": 0,
+    "cuda_version": null
+  },
+  "packages": {
+    "numpy": "2.2.6",
+    "pandas": "2.3.3",
+    "pyyaml": "not-installed",
+    "scipy": "1.16.3",
+    "ultralytics": "8.4.23",
+    "fastapi": "0.124.2",
+    "pytest": "9.0.2",
+    "ruff": "unknown",
+    "torch": "2.4.1+cpu",
+    "torchvision": "0.19.1+cpu",
+    "loguru": "0.7.3"
+  },
+  "resources": {
+    "disk_total_gb": 201.69,
+    "disk_free_gb": 97.14,
+    "ram": {
+      "total_gb": 16.2,
+      "available_gb": 1.95
+    }
+  },
+  "ports": {
+    "8000": "in-use",
+    "9000": "in-use"
+  }
+}

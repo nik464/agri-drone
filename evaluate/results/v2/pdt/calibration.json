@@ -1,0 +1,5 @@
+{
+  "status": "skipped",
+  "variant": "calibration",
+  "notes": "Temperature scaling + Platt scaling on 50 held-out PDT images. Reports Brier score and ECE before/after. Requires access to raw per-class logits (we only have top-1 confidence in the v3 CSV), so this variant needs a re-inference pass that saves full softmax vectors. GPU-required."
+}

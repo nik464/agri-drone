@@ -1,0 +1,7 @@
+{
+  "method": "dietterich_5x2cv_paired_t",
+  "t_statistic": 1.9365,
+  "df": 5,
+  "p_value": null,
+  "note": "compute two-sided p via scipy.stats.t.sf(abs(t), 5)*2"
+}

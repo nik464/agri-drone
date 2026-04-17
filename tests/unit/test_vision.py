@@ -12,9 +12,25 @@ from agridrone.types import BoundingBox, Detection, DetectionBatch
 
 @pytest.mark.unit
 def test_hotspot_detector_base_class():
-    """Test base HotspotDetector class."""
+    """Test base HotspotDetector class.
+
+    Device resolution is CPU-safe: when CUDA is unavailable, the detector must
+    fall back to ``cpu``. We therefore assert against the actually-available
+    device rather than hard-coding ``cuda``.
+    """
+    import torch
+
+    expected = "cuda" if torch.cuda.is_available() else "cpu"
     detector = HotspotDetector("test_model", Path("test.pt"))
     assert detector.model_name == "test_model"
+    assert detector.device == expected
+
+
+@pytest.mark.unit
+@pytest.mark.gpu
+def test_hotspot_detector_cuda_when_available():
+    """Sanity check: when running on a GPU host the detector picks CUDA."""
+    detector = HotspotDetector("test_model", Path("test.pt"), device="cuda")
     assert detector.device == "cuda"
 
 

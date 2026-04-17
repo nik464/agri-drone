@@ -1,6 +1,9 @@
 # AgriDrone AI Dashboard
 
-Premium, production-grade web dashboard for AgriDrone detection system powered by React, Vite, and Tailwind CSS.
+Research demo dashboard for the AgriDrone detection system, built with
+React, Vite, and Tailwind CSS. This is a **research prototype UI** — it
+visualises model predictions for illustrative purposes and is not a
+production deployment.
 
 ## Features
 

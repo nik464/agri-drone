@@ -1,0 +1,70 @@
+# Full experimental matrix configuration.
+#
+# Runs the complete 6 × 4 × 5 × 4 × 5 grid (backbones × rule engines ×
+# train fractions × datasets × CV folds). Regenerate artifacts with:
+#
+#     python evaluate/matrix/run_matrix.py --config configs/matrix/full.yaml
+#
+# Use `--dry-run` for a 0-second plan-only pass that creates the on-disk
+# skeleton without training anything (see also configs/matrix/smoke.yaml).
+#
+# Intended to be run on a GPU host; individual cells are resumable.
+
+run_id: "full-matrix-v4"
+
+axes:
+  backbone:
+    - yolov8n-cls
+    - yolov8s-cls
+    - efficientnet_b0
+    - convnext_tiny
+    - mobilenetv3_small
+    - vit_b_16
+
+  rule_engine:
+    - none
+    - handcrafted
+    - learned_tree
+    - llm_generated  # optional; requires ENABLE_LLM_RULES=1 at runtime
+
+  train_fraction:
+    - 1.0
+    - 0.5
+    - 0.25
+    - 0.10
+    - 0.05
+
+  dataset:
+    - indian21
+    - plantvillage_subset
+    - plantdoc_subset
+    - pdt
+
+  cv:
+    n_folds: 5
+    seeds: [42, 43, 44, 45, 46]
+
+training_recipe:
+  # Shared across all backbones (documented in docs/training_recipe.md).
+  epochs: 50
+  batch_size: 32
+  optimizer: adamw
+  lr: 0.00125
+  weight_decay: 1.0e-4
+  lr_schedule: cosine
+  warmup_epochs: 3
+  augmentation: standard_v1   # resize224 + hflip + colorjitter + affine
+  early_stopping_patience: 10
+  input_size: 224
+  label_smoothing: 0.1
+
+tracker: none                  # {none, mlflow, wandb}
+
+output:
+  root: evaluate/results/v2/matrix
+  compress_predictions: true
+
+execution:
+  resume: true
+  fail_fast: false
+  max_parallel_cells: 1

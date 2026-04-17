@@ -112,6 +112,7 @@ markers = [
     "integration: Integration tests",
     "slow: Slow running tests",
     "simulation: Simulation tests",
+    "gpu: Requires a CUDA GPU (auto-skipped when CUDA_VISIBLE_DEVICES is empty or torch.cuda is unavailable)",
 ]
 
 [tool.mypy]

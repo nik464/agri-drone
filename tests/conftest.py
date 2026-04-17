@@ -1,6 +1,7 @@
 """
 conftest.py - Pytest fixtures and configuration.
 """
+import os
 import pytest
 from pathlib import Path
 from datetime import datetime
@@ -10,6 +11,32 @@ from agridrone.types import (
     Detection, DetectionBatch, BoundingBox,
     GridCell, PrescriptionMap, GeoCoordinate,
 )
+
+
+def _cuda_available() -> bool:
+    """Return True iff a usable CUDA device is visible to the process.
+
+    Honours the conventional ``CUDA_VISIBLE_DEVICES=""`` opt-out even when
+    torch would otherwise report a device, so CI runners can force CPU.
+    """
+    if os.environ.get("CUDA_VISIBLE_DEVICES", None) == "":
+        return False
+    try:
+        import torch
+
+        return bool(torch.cuda.is_available())
+    except Exception:
+        return False
+
+
+def pytest_collection_modifyitems(config, items):
+    """Auto-skip tests marked ``gpu`` on CPU-only hosts."""
+    if _cuda_available():
+        return
+    skip_gpu = pytest.mark.skip(reason="no CUDA device available (gpu-marked test)")
+    for item in items:
+        if "gpu" in item.keywords:
+            item.add_marker(skip_gpu)
 
 
 @pytest.fixture

@@ -1,0 +1,490 @@
+{
+  "config": "B",
+  "n_boot": 100,
+  "alpha": 0.05,
+  "per_class": {
+    "healthy_rice": {
+      "precision": {
+        "point": 1.0,
+        "ci_lower": 1.0,
+        "ci_upper": 1.0,
+        "se": 0.0,
+        "n_boot": 100
+      },
+      "recall": {
+        "point": 1.0,
+        "ci_lower": 1.0,
+        "ci_upper": 1.0,
+        "se": 0.0,
+        "n_boot": 100
+      },
+      "f1": {
+        "point": 1.0,
+        "ci_lower": 1.0,
+        "ci_upper": 1.0,
+        "se": 0.0,
+        "n_boot": 100
+      }
+    },
+    "healthy_wheat": {
+      "precision": {
+        "point": 0.9556,
+        "ci_lower": 0.907,
+        "ci_upper": 1.0,
+        "se": 0.0272,
+        "n_boot": 100
+      },
+      "recall": {
+        "point": 0.9556,
+        "ci_lower": 0.8785,
+        "ci_upper": 1.0,
+        "se": 0.0332,
+        "n_boot": 100
+      },
+      "f1": {
+        "point": 0.9556,
+        "ci_lower": 0.9127,
+        "ci_upper": 0.9899,
+        "se": 0.0215,
+        "n_boot": 100
+      }
+    },
+    "rice_bacterial_blight": {
+      "precision": {
+        "point": 0.9783,
+        "ci_lower": 0.9262,
+        "ci_upper": 1.0,
+        "se": 0.021,
+        "n_boot": 100
+      },
+      "recall": {
+        "point": 1.0,
+        "ci_lower": 1.0,
+        "ci_upper": 1.0,
+        "se": 0.0,
+        "n_boot": 100
+      },
+      "f1": {
+        "point": 0.989,
+        "ci_lower": 0.9617,
+        "ci_upper": 1.0,
+        "se": 0.0109,
+        "n_boot": 100
+      }
+    },
+    "rice_blast": {
+      "precision": {
+        "point": 0.9362,
+        "ci_lower": 0.8492,
+        "ci_upper": 1.0,
+        "se": 0.0412,
+        "n_boot": 100
+      },
+      "recall": {
+        "point": 0.9778,
+        "ci_lower": 0.9297,
+        "ci_upper": 1.0,
+        "se": 0.0214,
+        "n_boot": 100
+      },
+      "f1": {
+        "point": 0.9565,
+        "ci_lower": 0.9065,
+        "ci_upper": 0.9953,
+        "se": 0.0246,
+        "n_boot": 100
+      }
+    },
+    "rice_brown_spot": {
+      "precision": {
+        "point": 1.0,
+        "ci_lower": 1.0,
+        "ci_upper": 1.0,
+        "se": 0.0,
+        "n_boot": 100
+      },
+      "recall": {
+        "point": 1.0,
+        "ci_lower": 1.0,
+        "ci_upper": 1.0,
+        "se": 0.0,
+        "n_boot": 100
+      },
+      "f1": {
+        "point": 1.0,
+        "ci_lower": 1.0,
+        "ci_upper": 1.0,
+        "se": 0.0,
+        "n_boot": 100
+      }
+    },
+    "rice_leaf_scald": {
+      "precision": {
+        "point": 1.0,
+        "ci_lower": 1.0,
+        "ci_upper": 1.0,
+        "se": 0.0,
+        "n_boot": 100
+      },
+      "recall": {
+        "point": 0.9333,
+        "ci_lower": 0.8602,
+        "ci_upper": 1.0,
+        "se": 0.0381,
+        "n_boot": 100
+      },
+      "f1": {
+        "point": 0.9655,
+        "ci_lower": 0.9249,
+        "ci_upper": 1.0,
+        "se": 0.0204,
+        "n_boot": 100
+      }
+    },
+    "rice_sheath_blight": {
+      "precision": {
+        "point": 1.0,
+        "ci_lower": 1.0,
+        "ci_upper": 1.0,
+        "se": 0.0,
+        "n_boot": 100
+      },
+      "recall": {
+        "point": 1.0,
+        "ci_lower": 1.0,
+        "ci_upper": 1.0,
+        "se": 0.0,
+        "n_boot": 100
+      },
+      "f1": {
+        "point": 1.0,
+        "ci_lower": 1.0,
+        "ci_upper": 1.0,
+        "se": 0.0,
+        "n_boot": 100
+      }
+    },
+    "wheat_aphid": {
+      "precision": {
+        "point": 0.9762,
+        "ci_lower": 0.9259,
+        "ci_upper": 1.0,
+        "se": 0.0242,
+        "n_boot": 100
+      },
+      "recall": {
+        "point": 0.9111,
+        "ci_lower": 0.7948,
+        "ci_upper": 1.0,
+        "se": 0.0499,
+        "n_boot": 100
+      },
+      "f1": {
+        "point": 0.9425,
+        "ci_lower": 0.8809,
+        "ci_upper": 0.9884,
+        "se": 0.0281,
+        "n_boot": 100
+      }
+    },
+    "wheat_black_rust": {
+      "precision": {
+        "point": 0.84,
+        "ci_lower": 0.7348,
+        "ci_upper": 0.9388,
+        "se": 0.0514,
+        "n_boot": 100
+      },
+      "recall": {
+        "point": 0.9333,
+        "ci_lower": 0.8527,
+        "ci_upper": 0.9814,
+        "se": 0.0376,
+        "n_boot": 100
+      },
+      "f1": {
+        "point": 0.8842,
+        "ci_lower": 0.8094,
+        "ci_upper": 0.949,
+        "se": 0.0354,
+        "n_boot": 100
+      }
+    },
+    "wheat_blast": {
+      "precision": {
+        "point": 0.9773,
+        "ci_lower": 0.9319,
+        "ci_upper": 1.0,
+        "se": 0.0217,
+        "n_boot": 100
+      },
+      "recall": {
+        "point": 0.9556,
+        "ci_lower": 0.8843,
+        "ci_upper": 1.0,
+        "se": 0.0315,
+        "n_boot": 100
+      },
+      "f1": {
+        "point": 0.9663,
+        "ci_lower": 0.9262,
+        "ci_upper": 1.0,
+        "se": 0.0205,
+        "n_boot": 100
+      }
+    },
+    "wheat_brown_rust": {
+      "precision": {
+        "point": 0.9268,
+        "ci_lower": 0.8697,
+        "ci_upper": 1.0,
+        "se": 0.0353,
+        "n_boot": 100
+      },
+      "recall": {
+        "point": 0.8444,
+        "ci_lower": 0.7308,
+        "ci_upper": 0.9517,
+        "se": 0.0585,
+        "n_boot": 100
+      },
+      "f1": {
+        "point": 0.8837,
+        "ci_lower": 0.8116,
+        "ci_upper": 0.9579,
+        "se": 0.0379,
+        "n_boot": 100
+      }
+    },
+    "wheat_fusarium_head_blight": {
+      "precision": {
+        "point": 1.0,
+        "ci_lower": 1.0,
+        "ci_upper": 1.0,
+        "se": 0.0,
+        "n_boot": 100
+      },
+      "recall": {
+        "point": 0.9778,
+        "ci_lower": 0.9202,
+        "ci_upper": 1.0,
+        "se": 0.0232,
+        "n_boot": 100
+      },
+      "f1": {
+        "point": 0.9888,
+        "ci_lower": 0.9584,
+        "ci_upper": 1.0,
+        "se": 0.012,
+        "n_boot": 100
+      }
+    },
+    "wheat_leaf_blight": {
+      "precision": {
+        "point": 0.8723,
+        "ci_lower": 0.7731,
+        "ci_upper": 0.9517,
+        "se": 0.0478,
+        "n_boot": 100
+      },
+      "recall": {
+        "point": 0.9111,
+        "ci_lower": 0.8403,
+        "ci_upper": 0.9792,
+        "se": 0.0413,
+        "n_boot": 100
+      },
+      "f1": {
+        "point": 0.8913,
+        "ci_lower": 0.8295,
+        "ci_upper": 0.9505,
+        "se": 0.0344,
+        "n_boot": 100
+      }
+    },
+    "wheat_mite": {
+      "precision": {
+        "point": 0.9375,
+        "ci_lower": 0.8794,
+        "ci_upper": 1.0,
+        "se": 0.0345,
+        "n_boot": 100
+      },
+      "recall": {
+        "point": 1.0,
+        "ci_lower": 1.0,
+        "ci_upper": 1.0,
+        "se": 0.0,
+        "n_boot": 100
+      },
+      "f1": {
+        "point": 0.9677,
+        "ci_lower": 0.9358,
+        "ci_upper": 1.0,
+        "se": 0.0184,
+        "n_boot": 100
+      }
+    },
+    "wheat_powdery_mildew": {
+      "precision": {
+        "point": 0.9783,
+        "ci_lower": 0.9213,
+        "ci_upper": 1.0,
+        "se": 0.0233,
+        "n_boot": 100
+      },
+      "recall": {
+        "point": 1.0,
+        "ci_lower": 1.0,
+        "ci_upper": 1.0,
+        "se": 0.0,
+        "n_boot": 100
+      },
+      "f1": {
+        "point": 0.989,
+        "ci_lower": 0.959,
+        "ci_upper": 1.0,
+        "se": 0.0121,
+        "n_boot": 100
+      }
+    },
+    "wheat_root_rot": {
+      "precision": {
+        "point": 0.9773,
+        "ci_lower": 0.9211,
+        "ci_upper": 1.0,
+        "se": 0.0227,
+        "n_boot": 100
+      },
+      "recall": {
+        "point": 0.9556,
+        "ci_lower": 0.9075,
+        "ci_upper": 1.0,
+        "se": 0.0243,
+        "n_boot": 100
+      },
+      "f1": {
+        "point": 0.9663,
+        "ci_lower": 0.9303,
+        "ci_upper": 0.9904,
+        "se": 0.0177,
+        "n_boot": 100
+      }
+    },
+    "wheat_septoria": {
+      "precision": {
+        "point": 1.0,
+        "ci_lower": 1.0,
+        "ci_upper": 1.0,
+        "se": 0.0,
+        "n_boot": 100
+      },
+      "recall": {
+        "point": 0.9778,
+        "ci_lower": 0.9284,
+        "ci_upper": 1.0,
+        "se": 0.0237,
+        "n_boot": 100
+      },
+      "f1": {
+        "point": 0.9888,
+        "ci_lower": 0.9629,
+        "ci_upper": 1.0,
+        "se": 0.0122,
+        "n_boot": 100
+      }
+    },
+    "wheat_smut": {
+      "precision": {
+        "point": 0.9556,
+        "ci_lower": 0.8903,
+        "ci_upper": 1.0,
+        "se": 0.0311,
+        "n_boot": 100
+      },
+      "recall": {
+        "point": 0.9773,
+        "ci_lower": 0.9379,
+        "ci_upper": 1.0,
+        "se": 0.0207,
+        "n_boot": 100
+      },
+      "f1": {
+        "point": 0.9663,
+        "ci_lower": 0.9212,
+        "ci_upper": 0.9957,
+        "se": 0.0181,
+        "n_boot": 100
+      }
+    },
+    "wheat_stem_fly": {
+      "precision": {
+        "point": 0.9722,
+        "ci_lower": 0.9135,
+        "ci_upper": 1.0,
+        "se": 0.0271,
+        "n_boot": 100
+      },
+      "recall": {
+        "point": 1.0,
+        "ci_lower": 1.0,
+        "ci_upper": 1.0,
+        "se": 0.0,
+        "n_boot": 100
+      },
+      "f1": {
+        "point": 0.9859,
+        "ci_lower": 0.9548,
+        "ci_upper": 1.0,
+        "se": 0.0141,
+        "n_boot": 100
+      }
+    },
+    "wheat_tan_spot": {
+      "precision": {
+        "point": 0.881,
+        "ci_lower": 0.7763,
+        "ci_upper": 0.9746,
+        "se": 0.0541,
+        "n_boot": 100
+      },
+      "recall": {
+        "point": 0.8222,
+        "ci_lower": 0.7141,
+        "ci_upper": 0.9048,
+        "se": 0.0518,
+        "n_boot": 100
+      },
+      "f1": {
+        "point": 0.8506,
+        "ci_lower": 0.7614,
+        "ci_upper": 0.9331,
+        "se": 0.0429,
+        "n_boot": 100
+      }
+    },
+    "wheat_yellow_rust": {
+      "precision": {
+        "point": 0.9565,
+        "ci_lower": 0.9053,
+        "ci_upper": 1.0,
+        "se": 0.026,
+        "n_boot": 100
+      },
+      "recall": {
+        "point": 0.9778,
+        "ci_lower": 0.9415,
+        "ci_upper": 1.0,
+        "se": 0.0196,
+        "n_boot": 100
+      },
+      "f1": {
+        "point": 0.967,
+        "ci_lower": 0.9414,
+        "ci_upper": 1.0,
+        "se": 0.0161,
+        "n_boot": 100
+      }
+    }
+  }
+}

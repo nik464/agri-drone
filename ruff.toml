@@ -1,0 +1,62 @@
+# Permissive ruff config for research-upgrade branch.
+# Kept intentionally loose so that pre-existing code does not need to be rewritten.
+# Tighten over time as the codebase stabilises.
+
+target-version = "py311"
+line-length = 120
+
+extend-exclude = [
+    "runs",
+    "outputs",
+    "data",
+    "datasets",
+    "models",
+    "dashboard/node_modules",
+    "frontend/node_modules",
+    "**/__pycache__",
+    "**/.venv",
+    "evaluate/llava_cache",
+    "evaluate/noisy_dataset",
+    "notebooks",
+]
+
+[lint]
+# Only enable a minimal, high-signal rule set.
+# Intentionally avoids style-only rules that would churn existing code.
+select = [
+    "E",   # pycodestyle errors
+    "F",   # pyflakes
+    "W",   # pycodestyle warnings
+]
+
+ignore = [
+    "E501",  # line too long (handled by formatters elsewhere)
+    "E402",  # module level import not at top of file (common in scripts that sys.path.insert)
+    "E722",  # bare except (legacy code)
+    "E741",  # ambiguous variable name
+    "F401",  # imported but unused (we keep __init__ re-exports)
+    "F403",  # star imports (legacy)
+    "F405",  # may be undefined from star import
+    "F841",  # unused local variable (diagnostic/debug leftovers)
+    "W605",  # invalid escape sequence in strings
+    "F541",  # f-string without placeholders (cosmetic)
+    "F811",  # redefined-while-unused (legacy shims)
+    "F821",  # undefined-name (used by forward-ref string annotations)
+    "E401",  # multiple-imports-on-one-line
+    "E701",  # multiple-statements-on-one-line-colon
+    "E702",  # multiple-statements-on-one-line-semicolon
+    "E711",  # comparison-to-none
+    "E712",  # comparison-to-true/false
+    "E713",  # not-in test
+    "E714",  # not-is test
+    "E721",  # type-comparison
+    "W291",  # trailing-whitespace
+    "W292",  # no-newline-at-end-of-file
+    "W293",  # blank-line-with-whitespace
+    "W391",  # blank-line-at-end-of-file
+]
+
+[lint.per-file-ignores]
+"tests/**" = ["F401", "F811", "E402"]
+"evaluate/**" = ["F401", "E402"]
+"scripts/**" = ["F401", "E402"]

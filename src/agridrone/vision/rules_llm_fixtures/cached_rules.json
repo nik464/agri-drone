@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "generated_by": "manual-seed-v0 (for test reproducibility; replace with real LLM output on GPU host)",
+  "notes": "Symptom predicates transcribed by hand from ICAR disease fact sheets so tests are fully offline. Real LLM-generated rules should be written here by scripts/generate_llm_rules.py on a host with network + API key access.",
+  "rules": {
+    "wheat_yellow_rust": [
+      {"feature": "yellow_ratio", "op": ">", "threshold": 0.15},
+      {"feature": "stripe_pattern_score", "op": ">", "threshold": 0.3}
+    ],
+    "wheat_brown_rust": [
+      {"feature": "brown_spot_density", "op": ">", "threshold": 0.1},
+      {"feature": "lesion_circularity", "op": ">", "threshold": 0.5}
+    ],
+    "wheat_powdery_mildew": [
+      {"feature": "white_coverage", "op": ">", "threshold": 0.05}
+    ],
+    "rice_blast": [
+      {"feature": "lesion_density", "op": ">", "threshold": 0.1},
+      {"feature": "gray_ratio", "op": ">", "threshold": 0.08}
+    ],
+    "healthy_wheat": [
+      {"feature": "green_ratio", "op": ">", "threshold": 0.5},
+      {"feature": "lesion_density", "op": "<", "threshold": 0.02}
+    ]
+  }
+}

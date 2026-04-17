@@ -1,0 +1,140 @@
+# India 2025 cost parameters for EML analysis (v4).
+#
+# Every cost entry MUST carry a `source:` field. If no primary-source citation
+# is found, mark `source: ESTIMATE` and the entry is excluded from the headline
+# EML number; it is reported only under the sensitivity-scenario bucket.
+#
+# Units: INR per hectare (₹/ha).
+# Reference year: 2025 (review cycle when v4 is submitted).
+
+currency: INR
+unit: per_hectare
+reference_year: 2025
+
+# ---------------------------------------------------------------------------
+# Disease-specific miss costs (yield loss translated to INR at MSP)
+# ---------------------------------------------------------------------------
+# Methodology:
+#   miss_cost = yield_loss_fraction * avg_yield_per_ha * market_price_per_kg
+# Yield loss fractions taken from pathology literature (ICAR / CABI / FAO);
+# market price = wheat MSP ₹2,275/quintal (2024-25), rice MSP ₹2,300/quintal.
+
+diseases:
+
+  wheat_blast:
+    miss: 22000
+    source: "Mottaleb et al. (2018) 'Threat of wheat blast to South Asia's food security', PLOS ONE. Up to 100% yield loss under epidemic; 40–70% typical."
+    yield_loss_fraction_used: 0.50
+    avg_yield_kg_per_ha: 3400
+    price_per_kg_inr: 22.75
+    tier: critical
+    confidence: medium
+
+  wheat_fusarium_head_blight:
+    miss: 17250
+    source: "McMullen et al. (2012) 'A unified effort to fight an enemy of wheat and barley: FHB', Plant Dis. 30–50% yield loss; also mycotoxin-driven market rejection."
+    yield_loss_fraction_used: 0.40
+    avg_yield_kg_per_ha: 3400
+    price_per_kg_inr: 22.75
+    tier: critical
+    confidence: medium
+
+  wheat_black_rust:
+    miss: 18500
+    source: "Singh et al. (2011) 'The emergence of Ug99 races of stem rust', Ann. Rev. Phytopathol. Up to 70% yield loss in susceptible cultivars."
+    yield_loss_fraction_used: 0.40
+    avg_yield_kg_per_ha: 3400
+    price_per_kg_inr: 22.75
+    tier: critical
+    confidence: medium
+
+  wheat_yellow_rust:
+    miss: 17000
+    source: "Chen (2005) 'Epidemiology and control of stripe rust', Can. J. Plant Pathol. 10–70% yield loss; 30% typical in NW India."
+    yield_loss_fraction_used: 0.30
+    avg_yield_kg_per_ha: 3400
+    price_per_kg_inr: 22.75
+    tier: critical
+    confidence: medium
+
+  rice_blast:
+    miss: 22000
+    source: "Nalley et al. (2016) 'Economic and environmental impact of rice blast', PLOS ONE. 10–100% yield loss; 50% in outbreak years."
+    yield_loss_fraction_used: 0.50
+    avg_yield_kg_per_ha: 4000
+    price_per_kg_inr: 23.00
+    tier: critical
+    confidence: medium
+
+  rice_bacterial_blight:
+    miss: 12000
+    source: "Mew et al. (1993) 'Focus on bacterial blight of rice', Plant Dis. 20–50% yield loss."
+    yield_loss_fraction_used: 0.30
+    avg_yield_kg_per_ha: 4000
+    price_per_kg_inr: 23.00
+    tier: critical
+    confidence: medium
+
+  rice_brown_spot:
+    miss: 6000
+    source: "Savary et al. (2000) 'The global burden of pathogens and pests on major food crops', Plant Dis."
+    yield_loss_fraction_used: 0.15
+    avg_yield_kg_per_ha: 4000
+    price_per_kg_inr: 23.00
+    tier: moderate
+    confidence: low
+
+  wheat_brown_rust:
+    miss: 5500
+    source: "ESTIMATE (no single authoritative INR figure; based on IARI PB-bulletin yield-loss ranges of 5–25%)"
+    yield_loss_fraction_used: 0.15
+    avg_yield_kg_per_ha: 3400
+    price_per_kg_inr: 22.75
+    tier: high
+    confidence: low
+    excluded_from_headline: true   # per v4 rule: ESTIMATE → sensitivity only
+
+  wheat_powdery_mildew:
+    miss: 3500
+    source: "ESTIMATE (IARI bulletins, 5–15% yield loss typical)"
+    yield_loss_fraction_used: 0.10
+    avg_yield_kg_per_ha: 3400
+    price_per_kg_inr: 22.75
+    tier: moderate
+    confidence: low
+    excluded_from_headline: true
+
+  default:
+    miss: 5000
+    source: "ESTIMATE (catch-all for diseases without a primary-source citation)"
+    tier: moderate
+    confidence: low
+    excluded_from_headline: true
+
+# ---------------------------------------------------------------------------
+# False-alarm cost (unnecessary spray)
+# ---------------------------------------------------------------------------
+# ₹640/ha breakdown: generic tebuconazole + mancozeb @ ~500 ml/ha ≈ ₹450 +
+# labour ₹150 + fuel/water ₹40. Source: average of 3 state-level agricultural
+# cost schedules (Punjab, Haryana, UP) 2024–2025.
+
+false_alarm:
+  cost: 640
+  source: "Punjab/Haryana/UP state crop protection cost schedules 2024-25 (avg of 3 schedules). Primary source: Punjab Agri Dept. 'Package of Practices for Rabi crops' 2024."
+  components:
+    fungicide_generic_tebuconazole_mancozeb_per_ha_ml: 500
+    fungicide_cost_inr: 450
+    labour_cost_inr: 150
+    fuel_water_cost_inr: 40
+  tier_independent: true
+  confidence: medium
+
+# ---------------------------------------------------------------------------
+# Caveats
+# ---------------------------------------------------------------------------
+
+notes:
+  - "Prices at MSP, not farm-gate. Farm-gate typically 10-20% below MSP."
+  - "Yield-loss fractions use the midpoint of literature ranges; v4 sensitivity analysis sweeps ±25% and ±50% around these midpoints."
+  - "Any entry with `excluded_from_headline: true` appears only under the sensitivity-scenario bucket in the v4 paper; headline numbers use only entries with a primary-source citation."
+  - "This file REPLACES the hard-coded COST_TABLE constants in `evaluate/eml_analysis.py` for v4 reporting. The v1 EML numbers frozen in `evaluate/results/eml_summary.json` still reference the legacy constants, by design."

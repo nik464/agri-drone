@@ -1,0 +1,11 @@
+{
+  "status": "ok",
+  "n_pos": 567,
+  "n_neg": 105,
+  "roc_auc": 0.7086,
+  "pr_auc": 0.832,
+  "specificity_at_90_sensitivity": 0.22857142857142856,
+  "sensitivity_at_90_specificity": 0.4444444444444444,
+  "n_thresholds": 443,
+  "honest_argmax_note": "At tau=argmax the model collapses to constant 'unhealthy'. Any apparent skill comes from non-argmax operating points."
+}

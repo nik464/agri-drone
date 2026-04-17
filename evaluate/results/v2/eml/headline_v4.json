@@ -1,0 +1,8 @@
+{
+  "headline_eml_inr_per_ha": 317.89,
+  "sensitivity_scenario_eml_inr_per_ha": 321.64,
+  "n_diseases_in_headline": 7,
+  "n_diseases_in_sensitivity": 9,
+  "methodology": "only entries with primary-source citations enter headline",
+  "costs_file": "configs\\economics\\india_2025.yaml"
+}

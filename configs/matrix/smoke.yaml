@@ -1,0 +1,42 @@
+# Tiny smoke configuration for CI / dry-run validation.
+# Runs in < 5s with synthetic data. Not for publication.
+
+run_id: "smoke"
+
+axes:
+  backbone:
+    - yolov8n-cls
+  rule_engine:
+    - none
+    - handcrafted
+  train_fraction:
+    - 1.0
+  dataset:
+    - indian21
+  cv:
+    n_folds: 1
+    seeds: [42]
+
+training_recipe:
+  epochs: 1
+  batch_size: 4
+  optimizer: adamw
+  lr: 0.001
+  weight_decay: 0.0
+  lr_schedule: cosine
+  warmup_epochs: 0
+  augmentation: none
+  early_stopping_patience: 1
+  input_size: 64
+  label_smoothing: 0.0
+
+tracker: none
+
+output:
+  root: evaluate/results/v2/matrix
+  compress_predictions: false
+
+execution:
+  resume: false
+  fail_fast: true
+  max_parallel_cells: 1

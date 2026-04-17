@@ -268,7 +268,26 @@ def main():
     parser.add_argument("--n-boot", type=int, default=10000, help="Bootstrap iterations")
     parser.add_argument("--alpha", type=float, default=0.05, help="CI significance level")
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument(
+        "--v2",
+        action="store_true",
+        help=(
+            "Route to the v2 statistical protocol (per-class bootstrap, "
+            "Holm-Bonferroni, Dietterich 5x2cv, Friedman-Nemenyi). Writes to "
+            "evaluate/results/v2/statistics/. Does not touch v1 artifacts."
+        ),
+    )
     args = parser.parse_args()
+
+    if args.v2:
+        # Lazy import keeps v1 path dependency-free.
+        from statistical_tests_v2 import run_v2  # type: ignore
+        return run_v2(
+            results_dir=Path(args.results_dir),
+            n_boot=args.n_boot,
+            alpha=args.alpha,
+            seed=args.seed,
+        )
 
     results_dir = Path(args.results_dir)
     output = {}
