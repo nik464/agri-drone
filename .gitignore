@@ -98,6 +98,8 @@ evaluate/noisy_dataset/
 # ──────────────────────────── Jupyter Notebooks ───────────────────────────────
 .ipynb_checkpoints/
 *.ipynb
+# ...except the Colab walkthrough notebooks for Phase 2
+!notebooks/colab/*.ipynb
 
 # ──────────────────────────── Testing / Coverage ──────────────────────────────
 .pytest_cache/
