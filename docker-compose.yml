@@ -1,0 +1,8 @@
+services:
+  agri-drone:
+    build: .
+    image: agri-drone:research-upgrade
+    working_dir: /app
+    volumes:
+      - ./:/app
+    command: ["bash", "-lc", "ruff check . && pytest -q tests/regression && python scripts/smoke_test.py"]

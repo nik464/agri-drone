@@ -1,0 +1,37 @@
+# requirements.lock.txt
+#
+# Exact-version lock of the packages actually used in the v3/v4 experiments.
+# Generated manually from `pip show` of the interpreter that produced the
+# frozen v3 results. Keep in sync with requirements.txt; bump only when
+# regenerating a v2 artifact.
+#
+# Python: 3.11.7
+# Platform: Windows 10 / 11 x86_64
+
+# core
+numpy==2.3.4
+pandas==2.3.3
+pyyaml==6.0.3
+omegaconf==2.3.0
+loguru==0.7.3
+pillow==12.0.0
+
+# ML stack
+torch==2.5.1
+torchvision==0.20.1
+ultralytics==8.3.214
+
+# FastAPI backend
+fastapi==0.121.1
+uvicorn==0.39.0
+
+# Tests + lint (Step 1 safety net)
+pytest==9.0.2
+ruff==0.14.4
+
+# Scientific / statistical utilities (Step 5)
+scipy==1.16.0
+
+# Optional trackers (behind --tracker flag)
+# mlflow==2.15.1
+# wandb==0.18.3

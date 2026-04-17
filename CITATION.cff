@@ -1,0 +1,35 @@
+cff-version: 1.2.0
+message: "If you use this software or its companion paper, please cite as below."
+title: "agri-drone: when do hand-crafted rules help modern CNNs for agricultural disease classification?"
+abstract: >
+  Research codebase for a multi-architecture evaluation of hand-crafted rule
+  engines, learned decision-tree rules, and LLM-generated rule baselines
+  composed with modern CNN classifiers on agricultural disease datasets.
+  Includes reproducibility tooling, statistical protocol (bootstrap,
+  Holm-Bonferroni, Dietterich 5x2cv, Friedman-Nemenyi), and expected
+  misclassification loss (EML) sensitivity analysis.
+type: software
+version: "0.2.0-research-upgrade"
+license: MIT
+url: "https://github.com/Ashut0sh-mishra/agri-drone"
+repository-code: "https://github.com/Ashut0sh-mishra/agri-drone"
+authors:
+  - family-names: "{{AUTHOR_FAMILY_NAME}}"
+    given-names: "{{AUTHOR_GIVEN_NAME}}"
+    affiliation: "{{AUTHOR_AFFILIATION}}"
+    orcid: "https://orcid.org/{{AUTHOR_ORCID}}"
+keywords:
+  - agricultural-ai
+  - plant-disease-classification
+  - rule-based-ai
+  - neuro-symbolic
+  - reproducibility
+  - benchmarking
+preferred-citation:
+  type: article
+  title: "When Do Hand-Crafted Rules Help Modern CNNs for Agricultural Disease Classification?"
+  authors:
+    - family-names: "{{AUTHOR_FAMILY_NAME}}"
+      given-names: "{{AUTHOR_GIVEN_NAME}}"
+  year: 2025
+  journal: "Smart Agricultural Technology (under review)"
