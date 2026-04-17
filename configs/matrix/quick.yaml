@@ -26,15 +26,20 @@ axes:
     seeds: [42]
 
 training_recipe:
-  epochs: 25
+  # Budget for Colab T4 ~1 h of real training for the 8-cell quick matrix.
+  # pool_cap_per_class=300 -> 11.4k images pooled across 38 PV classes
+  # -> ~9.1k train after 80/10/10 split -> ~7 min/cell EffNet-B0, ~10 min/cell YOLOv8n-cls.
+  # Bump to 500 if you have headroom; raise epochs rather than cap for more accuracy.
+  pool_cap_per_class: 300
+  epochs: 8
   batch_size: 32
   optimizer: adamw
   lr: 0.00125
   weight_decay: 1.0e-4
   lr_schedule: cosine
-  warmup_epochs: 2
+  warmup_epochs: 1
   augmentation: standard_v1
-  early_stopping_patience: 5
+  early_stopping_patience: 3
   input_size: 224
   label_smoothing: 0.1
 
