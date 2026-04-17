@@ -195,13 +195,45 @@ def _dry_run_record(cell: Cell, cfg: dict) -> dict:
 # Real-run shim
 # ---------------------------------------------------------------------------
 
+def _load_train_and_eval():
+    """Import ``train_and_eval`` robustly.
+
+    Colab invokes this file as a script, so only ``evaluate/matrix/`` is on
+    ``sys.path`` and ``from evaluate.matrix.train import ...`` fails with
+    ``No module named 'evaluate'``. The HuggingFace ``evaluate`` PyPI package
+    can also shadow the local folder. We therefore:
+
+    1. Prepend ``PROJECT_ROOT`` to ``sys.path`` and retry the package import.
+    2. Fall back to loading ``evaluate/matrix/train.py`` directly by file path.
+    """
+    root = str(PROJECT_ROOT)
+    if root not in sys.path:
+        sys.path.insert(0, root)
+    try:
+        from evaluate.matrix.train import train_and_eval  # type: ignore
+        return train_and_eval
+    except Exception:
+        pass
+    # Fallback: load the file directly, bypassing any shadowing `evaluate` package.
+    import importlib.util
+    train_py = PROJECT_ROOT / "evaluate" / "matrix" / "train.py"
+    if not train_py.exists():
+        raise ImportError(f"cannot locate {train_py}")
+    spec = importlib.util.spec_from_file_location("_agridrone_matrix_train", train_py)
+    if spec is None or spec.loader is None:
+        raise ImportError(f"cannot build spec for {train_py}")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)  # type: ignore[union-attr]
+    return mod.train_and_eval
+
+
 def _real_run_record(cell: Cell, cfg: dict) -> dict:
     """Delegate to evaluate.matrix.train.train_and_eval.
 
     Kept behind a lazy import so that --dry-run never needs torch.
     """
     try:
-        from evaluate.matrix.train import train_and_eval  # type: ignore
+        train_and_eval = _load_train_and_eval()
     except Exception as e:  # noqa: BLE001
         return {
             "run_id": cfg["run_id"],
