@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches: [main, research-upgrade]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11"]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install lightweight deps
+        # We intentionally do NOT install the heavy torch/ultralytics stack in CI;
+        # the regression tests only read JSON artifacts, and the smoke test is
+        # designed to degrade gracefully when optional deps are missing.
+        run: |
+          python -m pip install --upgrade pip
+          pip install ruff pytest numpy opencv-python-headless loguru pydantic
+
+      - name: Lint (ruff)
+        run: ruff check .
+
+      - name: Regression tests (frozen metrics)
+        run: pytest -q tests/regression
+
+      - name: Smoke test
+        run: python scripts/smoke_test.py --verbose
