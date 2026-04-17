@@ -75,65 +75,68 @@ def _is_plant_image(image_bgr: np.ndarray) -> dict:
     """Check whether the image likely contains a plant / crop.
 
     Uses:
-    1. OpenCV Haar cascade FACE DETECTION (primary — catches any human face)
-    2. Face area ratio (how much of the image is face)
-    3. Green pixel ratio as secondary check
+    1. OpenCV Haar cascade FACE DETECTION
+    2. Skin pixel detection (catches fingers, hands, arms)
+    3. Green/brown vegetation pixel ratio
 
     Returns dict with:
-        is_plant (bool), reason (str), green_ratio, face_count, face_area_pct
+        is_plant (bool), reason (str), green_ratio, face_count, face_area_pct, skin_ratio
     """
     img_h, img_w = image_bgr.shape[:2]
     total_pixels = img_h * img_w
 
-    # ── 1. FACE DETECTION (the reliable method) ──
+    # ── 1. FACE DETECTION ──
     faces = _detect_faces(image_bgr)
     face_count = len(faces)
-
-    # Calculate what % of the image is covered by faces
     face_area = sum(w * h_val for (_, _, w, h_val) in faces)
     face_area_pct = face_area / total_pixels if total_pixels > 0 else 0
 
-    # ── 2. Green vegetation check ──
+    # ── 2. Skin detection (YCrCb color space — catches fingers/hands) ──
+    ycrcb = cv2.cvtColor(image_bgr, cv2.COLOR_BGR2YCrCb)
+    cr, cb = ycrcb[:, :, 1], ycrcb[:, :, 2]
+    skin_mask = (cr >= 133) & (cr <= 173) & (cb >= 77) & (cb <= 127)
+    skin_ratio = float(np.count_nonzero(skin_mask) / total_pixels)
+
+    # ── 3. Green vegetation check ──
     hsv = cv2.cvtColor(image_bgr, cv2.COLOR_BGR2HSV)
     h, s, v = hsv[:, :, 0], hsv[:, :, 1], hsv[:, :, 2]
     green_mask = (h >= 30) & (h <= 90) & (s > 25) & (v > 30)
     green_ratio = float(np.count_nonzero(green_mask) / total_pixels)
 
+    # ── 4. Brown vegetation (dried leaves, stems, soil) ──
+    brown_veg = (h >= 10) & (h <= 28) & (s > 50) & (v > 40)
+    brown_ratio = float(np.count_nonzero(brown_veg) / total_pixels)
+    vegetation_ratio = green_ratio + brown_ratio
+
     # ── Decision logic ──
     is_plant = True
     reason = ""
 
-    if face_count > 0:
-        # Face detected — this is a human photo, not a plant
-        if face_area_pct > 0.02:
-            # Face takes up meaningful portion of image
-            is_plant = False
-            reason = (
-                f"Human face detected in the image ({face_count} face{'s' if face_count > 1 else ''}, "
-                f"covering {face_area_pct:.0%} of image). "
-                f"Please upload a photo of a crop leaf or agricultural field."
-            )
-        elif green_ratio > 0.15:
-            # Face detected but lots of green — could be farmer in field, allow it
+    if face_count > 0 and face_area_pct > 0.02:
+        if green_ratio > 0.15:
+            # Face visible but plenty of green — farmer in field, allow
             is_plant = True
             logger.info(f"Face detected but high green ({green_ratio:.0%}) — allowing as field photo")
         else:
             is_plant = False
             reason = (
-                f"Human face detected. This does not appear to be a crop/plant image. "
-                f"Please upload a close-up photo of crop leaves."
+                f"Human face detected ({face_count} face{'s' if face_count > 1 else ''}, "
+                f"covering {face_area_pct:.0%}). Please upload a crop photo."
             )
-    elif green_ratio < 0.02:
-        # No face, but also no green at all — check for brown vegetation
-        brown_veg = (h >= 10) & (h <= 28) & (s > 50) & (v > 40)
-        brown_ratio = float(np.count_nonzero(brown_veg) / total_pixels)
-        if brown_ratio < 0.05:
-            is_plant = False
-            reason = "No plant or crop features detected in this image."
+    elif skin_ratio > 0.40 and vegetation_ratio < 0.10:
+        # Mostly skin with very little vegetation — likely a selfie or hand photo
+        is_plant = False
+        reason = "Image appears to be mostly skin/human. Please upload a crop photo."
+    elif vegetation_ratio < 0.02 and skin_ratio < 0.10:
+        # No vegetation and no skin — could be indoor object, text, etc.
+        is_plant = False
+        reason = "No plant or crop features detected in this image."
+    # else: has enough vegetation (green + brown) or plant with some skin (finger holding leaf)
 
     logger.info(
         f"Plant gatekeeper: faces={face_count} face_area={face_area_pct:.1%} "
-        f"green={green_ratio:.1%} → {'PLANT' if is_plant else 'REJECTED'}"
+        f"skin={skin_ratio:.1%} green={green_ratio:.1%} brown={brown_ratio:.1%} "
+        f"→ {'PLANT' if is_plant else 'REJECTED'}"
     )
     return {
         "is_plant": is_plant,
@@ -141,7 +144,7 @@ def _is_plant_image(image_bgr: np.ndarray) -> dict:
         "green_ratio": round(green_ratio, 4),
         "face_count": face_count,
         "face_area_pct": round(face_area_pct, 4),
-        "skin_ratio": round(face_area_pct, 4),  # backward compat with frontend
+        "skin_ratio": round(skin_ratio, 4),
     }
 
 
@@ -1779,6 +1782,309 @@ def create_app() -> FastAPI:
             }
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Reload failed: {str(e)}")
+
+    # ============================================================
+    # Batch Detection (process multiple images in one request)
+    # ============================================================
+    @app.post("/detect/batch")
+    async def detect_batch(
+        files: List[UploadFile] = File(...),
+        confidence_threshold: float = Form(0.3),
+        crop_type: str = Form("wheat"),
+        area_acres: float = Form(1.0),
+        growth_stage: str = Form("unknown"),
+    ):
+        """
+        Batch detection: accepts multiple images, returns results for each.
+        Each image goes through the full pipeline (classifier + YOLO + reasoning).
+        """
+        if len(files) > 50:
+            raise HTTPException(status_code=400, detail="Maximum 50 images per batch")
+
+        results = []
+        summary = {
+            "total_images": len(files),
+            "healthy_count": 0,
+            "diseased_count": 0,
+            "rejected_count": 0,
+            "disease_distribution": {},
+            "avg_health_score": 0,
+            "total_detections": 0,
+        }
+        health_scores = []
+
+        for idx, file in enumerate(files):
+            try:
+                contents = await file.read()
+                if not contents:
+                    results.append({"index": idx, "filename": file.filename, "error": "Empty file", "rejected": True})
+                    summary["rejected_count"] += 1
+                    continue
+
+                nparr = np.frombuffer(contents, np.uint8)
+                image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+                if image is None:
+                    results.append({"index": idx, "filename": file.filename, "error": "Failed to decode", "rejected": True})
+                    summary["rejected_count"] += 1
+                    continue
+
+                image = _resize_if_large(image)
+
+                # Plant check
+                plant_check = _is_plant_image(image)
+                if not plant_check["is_plant"]:
+                    # Return thumbnail for rejected
+                    thumb = cv2.resize(image, (200, 200))
+                    _, enc = cv2.imencode('.jpg', thumb, [cv2.IMWRITE_JPEG_QUALITY, 70])
+                    thumb_b64 = f"data:image/jpeg;base64,{base64.b64encode(enc).decode()}"
+                    results.append({
+                        "index": idx, "filename": file.filename,
+                        "rejected": True, "rejection_reason": plant_check["reason"],
+                        "thumbnail": thumb_b64,
+                    })
+                    summary["rejected_count"] += 1
+                    continue
+
+                start_t = time.time()
+
+                # Classifier
+                classifier_result = _classify_image(image)
+
+                # YOLO detection
+                detections, annotated_b64 = _yolo_detect(image, confidence_threshold, True, crop_type)
+
+                # Reasoning engine
+                reasoning_result = None
+                try:
+                    from ..vision.disease_reasoning import run_full_pipeline, diagnosis_to_dict
+                    pipeline_output = run_full_pipeline(image, classifier_result, crop_type)
+                    diagnosis = pipeline_output.diagnosis
+                    reasoning_result = diagnosis_to_dict(diagnosis)
+                except Exception:
+                    pass
+
+                # Ensemble
+                ensemble = _compute_ensemble(None, classifier_result)
+
+                proc_ms = (time.time() - start_t) * 1000
+
+                # Determine disease
+                disease_name = "Healthy"
+                confidence_val = 0.0
+                if reasoning_result and reasoning_result.get("disease_key", "healthy") != "healthy":
+                    disease_name = reasoning_result.get("disease_name", "Unknown")
+                    confidence_val = reasoning_result.get("confidence", 0)
+                elif classifier_result:
+                    disease_name = classifier_result.get("top_prediction", "Unknown")
+                    confidence_val = classifier_result.get("top_confidence", 0)
+
+                is_healthy = disease_name.lower().startswith("healthy")
+                health_score = ensemble.get("ensemble_health_score", 50)
+                health_scores.append(health_score)
+
+                # Update summary
+                if is_healthy:
+                    summary["healthy_count"] += 1
+                else:
+                    summary["diseased_count"] += 1
+                summary["total_detections"] += len(detections)
+                summary["disease_distribution"][disease_name] = summary["disease_distribution"].get(disease_name, 0) + 1
+
+                # Build thumbnail with annotations
+                thumb_img = image.copy()
+                # Draw YOLO bboxes on thumbnail
+                for det in detections:
+                    x1 = int(det.get("x1", 0))
+                    y1 = int(det.get("y1", 0))
+                    x2 = int(det.get("x2", 0))
+                    y2 = int(det.get("y2", 0))
+                    cv2.rectangle(thumb_img, (x1, y1), (x2, y2), (0, 255, 0), 2)
+                    label = f"{det.get('class_name', '')} {det.get('confidence', 0):.0%}"
+                    cv2.putText(thumb_img, label, (x1, max(y1-5, 15)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+
+                _, enc = cv2.imencode('.jpg', thumb_img, [cv2.IMWRITE_JPEG_QUALITY, 80])
+                annotated_thumb = f"data:image/jpeg;base64,{base64.b64encode(enc).decode()}"
+
+                # Original image thumbnail (clean)
+                _, enc2 = cv2.imencode('.jpg', image, [cv2.IMWRITE_JPEG_QUALITY, 80])
+                original_b64 = f"data:image/jpeg;base64,{base64.b64encode(enc2).decode()}"
+
+                results.append({
+                    "index": idx,
+                    "filename": file.filename,
+                    "rejected": False,
+                    "disease_name": disease_name,
+                    "confidence": round(confidence_val, 3),
+                    "health_score": health_score,
+                    "risk_level": ensemble.get("ensemble_risk_level", "medium"),
+                    "detections": detections,
+                    "num_detections": len(detections),
+                    "annotated_image": annotated_thumb,
+                    "original_image": original_b64,
+                    "classifier_top5": classifier_result.get("top5", []) if classifier_result else [],
+                    "processing_time_ms": round(proc_ms, 1),
+                    "treatment": reasoning_result.get("treatment", {}) if reasoning_result else None,
+                    "evidence": reasoning_result.get("evidence", []) if reasoning_result else [],
+                })
+
+            except Exception as e:
+                logger.warning(f"Batch item {idx} ({file.filename}) failed: {e}")
+                results.append({"index": idx, "filename": file.filename, "error": str(e), "rejected": True})
+                summary["rejected_count"] += 1
+
+        summary["avg_health_score"] = round(sum(health_scores) / len(health_scores), 1) if health_scores else 0
+        return {"results": results, "summary": summary}
+
+    # ============================================================
+    # Video Detection (upload video, extract frames, detect)
+    # ============================================================
+    @app.post("/detect/video")
+    async def detect_video(
+        file: UploadFile = File(...),
+        confidence_threshold: float = Form(0.3),
+        crop_type: str = Form("wheat"),
+        frame_interval: int = Form(30),
+        max_frames: int = Form(20),
+    ):
+        """
+        Video detection: upload a video file, extract frames at intervals,
+        run detection on each frame.
+        frame_interval: extract every Nth frame (default: every 30th frame = ~1/sec at 30fps)
+        max_frames: maximum frames to process (default: 20)
+        """
+        import tempfile
+
+        if max_frames > 100:
+            max_frames = 100
+
+        contents = await file.read()
+        if not contents:
+            raise HTTPException(status_code=400, detail="Empty video file")
+
+        # Write to temp file for OpenCV
+        suffix = Path(file.filename).suffix or ".mp4"
+        with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
+            tmp.write(contents)
+            tmp_path = tmp.name
+
+        try:
+            cap = cv2.VideoCapture(tmp_path)
+            if not cap.isOpened():
+                raise HTTPException(status_code=400, detail="Could not open video file")
+
+            fps = cap.get(cv2.CAP_PROP_FPS) or 30
+            total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+            duration_sec = total_frames / fps if fps > 0 else 0
+
+            frames_results = []
+            frame_idx = 0
+            processed = 0
+            health_scores = []
+            disease_dist = {}
+
+            while processed < max_frames:
+                cap.set(cv2.CAP_PROP_POS_FRAMES, frame_idx)
+                ret, frame = cap.read()
+                if not ret:
+                    break
+
+                frame = _resize_if_large(frame)
+                timestamp_sec = round(frame_idx / fps, 2) if fps > 0 else 0
+
+                # Plant check (skip non-plant frames silently)
+                plant_check = _is_plant_image(frame)
+                if not plant_check["is_plant"]:
+                    frame_idx += frame_interval
+                    continue
+
+                start_t = time.time()
+
+                # Classifier
+                classifier_result = _classify_image(frame)
+
+                # YOLO detection
+                detections, _ = _yolo_detect(frame, confidence_threshold, False, crop_type)
+
+                # Reasoning
+                reasoning_result = None
+                try:
+                    from ..vision.disease_reasoning import run_full_pipeline, diagnosis_to_dict
+                    po = run_full_pipeline(frame, classifier_result, crop_type)
+                    reasoning_result = diagnosis_to_dict(po.diagnosis)
+                except Exception:
+                    pass
+
+                # Ensemble
+                ensemble = _compute_ensemble(None, classifier_result)
+
+                proc_ms = (time.time() - start_t) * 1000
+
+                disease_name = "Healthy"
+                confidence_val = 0.0
+                if reasoning_result and reasoning_result.get("disease_key", "healthy") != "healthy":
+                    disease_name = reasoning_result.get("disease_name", "Unknown")
+                    confidence_val = reasoning_result.get("confidence", 0)
+                elif classifier_result:
+                    disease_name = classifier_result.get("top_prediction", "Unknown")
+                    confidence_val = classifier_result.get("top_confidence", 0)
+
+                health_score = ensemble.get("ensemble_health_score", 50)
+                health_scores.append(health_score)
+                disease_dist[disease_name] = disease_dist.get(disease_name, 0) + 1
+
+                # Draw detections on frame for annotated thumbnail
+                annotated_frame = frame.copy()
+                for det in detections:
+                    x1 = int(det.get("x1", 0))
+                    y1 = int(det.get("y1", 0))
+                    x2 = int(det.get("x2", 0))
+                    y2 = int(det.get("y2", 0))
+                    cv2.rectangle(annotated_frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
+                    label = f"{det.get('class_name', '')} {det.get('confidence', 0):.0%}"
+                    cv2.putText(annotated_frame, label, (x1, max(y1-5, 15)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+
+                _, enc = cv2.imencode('.jpg', annotated_frame, [cv2.IMWRITE_JPEG_QUALITY, 75])
+                annotated_b64 = f"data:image/jpeg;base64,{base64.b64encode(enc).decode()}"
+                _, enc2 = cv2.imencode('.jpg', frame, [cv2.IMWRITE_JPEG_QUALITY, 75])
+                original_b64 = f"data:image/jpeg;base64,{base64.b64encode(enc2).decode()}"
+
+                frames_results.append({
+                    "frame_index": frame_idx,
+                    "timestamp_sec": timestamp_sec,
+                    "disease_name": disease_name,
+                    "confidence": round(confidence_val, 3),
+                    "health_score": health_score,
+                    "detections": detections,
+                    "num_detections": len(detections),
+                    "annotated_image": annotated_b64,
+                    "original_image": original_b64,
+                    "processing_time_ms": round(proc_ms, 1),
+                })
+
+                processed += 1
+                frame_idx += frame_interval
+
+            cap.release()
+
+            summary = {
+                "filename": file.filename,
+                "fps": round(fps, 1),
+                "total_video_frames": total_frames,
+                "duration_sec": round(duration_sec, 1),
+                "frames_processed": len(frames_results),
+                "frame_interval": frame_interval,
+                "avg_health_score": round(sum(health_scores) / len(health_scores), 1) if health_scores else 0,
+                "disease_distribution": disease_dist,
+                "health_timeline": [{"timestamp": f["timestamp_sec"], "health": f["health_score"]} for f in frames_results],
+            }
+
+            return {"frames": frames_results, "summary": summary}
+
+        finally:
+            try:
+                os.unlink(tmp_path)
+            except Exception:
+                pass
 
     @app.post("/missions")
     async def create_mission(mission_data: dict):
