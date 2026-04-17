@@ -99,3 +99,58 @@ further infrastructure work.
 * [ ] ``python evaluate/eml_sensitivity.py`` reports headline + tornado JSON
 * [ ] ``python -c 'from agridrone.vision.rule_engine_base import available; print(available())'``
       prints ``['handcrafted','learned_tree','llm_generated','none']``
+
+---
+
+## Phase 2 addendum — GPU hand-off (7 more commits)
+
+The author has no local GPU, so all heavy compute is staged for Colab and
+bundled into reviewable notebooks.
+
+| # | Hash | Commit |
+|---|------|--------|
+| 11 | ``7547da3`` | fix(tests): make hotspot detector test device-agnostic |
+| 12 | ``763bb23`` | chore(audit): add system environment audit scripts |
+| 13 | ``21b6309`` | feat(colab): end-to-end experimental matrix notebook |
+| 14 | ``ecdfc59`` | feat(colab): PDT calibration and few-shot notebook |
+| 15 | ``ab16b98`` | feat(colab): fair multi-backbone baseline notebook |
+| 16 | ``a6e98fc`` | docs(colab): non-ML user walkthrough for all three notebooks |
+| 17 | ``d3536f4`` | docs(phase2): handoff report and user action checklist |
+
+Highlights:
+
+* **Test now passes on CPU hosts.** ``test_hotspot_detector_base_class``
+  asserts ``device == 'cuda' if torch.cuda.is_available() else 'cpu'``. New
+  ``gpu`` pytest marker with auto-skip in ``tests/conftest.py``. Current
+  result: **35 passed, 1 skipped**.
+* **Cross-platform audit.** ``scripts/audit_system.py`` +
+  ``scripts/audit_system.ps1`` emit ``docs/system_audit_report.json`` (OS,
+  Python, git, GPU, torch, disk, RAM, ports).
+* **Three Colab notebooks** under ``notebooks/colab/``, built
+  deterministically by ``scripts/_build_colab_notebooks.py``:
+  1. ``01_run_matrix.ipynb`` — runs the quick/full matrix end-to-end,
+     post-matrix stats + EML + baselines + PDT, writes
+     ``RESULTS_SUMMARY.md``, zips artefacts.
+  2. ``02_pdt_calibration.ipynb`` — threshold sweep, few-shot
+     (5/10/25/50), temperature + Platt scaling, reliability diagram,
+     writes ``PDT_SECTION.md`` for v4 §5.4.
+  3. ``03_baseline_reaudit.ipynb`` — fair re-audit of EfficientNet-B0,
+     ConvNeXt-Tiny, MobileNetV3-Small under the shared recipe; writes
+     ``BASELINES_TABLE.md`` for v4 §6.7.
+* **Non-ML walkthrough** in ``notebooks/colab/README.md`` with Drive
+  folder structure, runtime / cost expectations, troubleshooting table.
+* **Single hand-off doc** ``docs/PHASE2_HANDOFF.md`` enumerates every
+  remaining user action, including a placeholder-fill table pointing at
+  exact file + line for ``{{AUTHOR_*}}`` / ``{{ZENODO_DOI}}`` /
+  ``{{GDRIVE_URL}}``.
+
+Verification on the author's (CPU-only) host at commit ``d3536f4``:
+
+```
+ruff check .                      -> All checks passed!
+pytest -q                         -> 35 passed, 1 skipped in 1.53s
+python scripts/audit_system.py    -> docs/system_audit_report.json written
+```
+
+No existing file was deleted or renamed in Phase 2 either. No v3 paper or
+published v1 result was touched.
