@@ -1,0 +1,20 @@
+# Exclude large unnecessary directories from Docker build
+.git
+.venv
+__pycache__
+*.pyc
+node_modules
+frontend/node_modules
+dashboard/node_modules
+runs/
+outputs/
+datasets/
+data/raw/
+data/interim/
+notebooks/
+docs/
+*.egg-info
+.ruff_cache
+.pytest_cache
+
+# Keep: models/, src/, configs/, evaluate/, scripts/, tests/, pyproject.toml

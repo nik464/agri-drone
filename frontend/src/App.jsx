@@ -452,20 +452,44 @@ export default function App() {
           }}
           onViewDetail={(item) => {
             // View full detail of a batch item by simulating a single-image result structure
+            const top5 = item.classifier_top5 || []
+            const topPred = top5[0] || {}
             setResult({
               rejected: item.rejected,
+              rejection_reason: item.rejection_reason,
               is_plant: !item.rejected,
+              face_count: item.face_count || 0,
+              green_ratio: item.green_ratio || 0,
               structured: null,
               detections: item.detections || [],
               image: item.original_image,
               annotated_image: item.annotated_image,
-              classifier_result: { top5: item.classifier_top5 || [] },
-              reasoning: item.treatment ? { treatment: item.treatment, evidence: item.evidence } : null,
+              classifier_result: {
+                top5,
+                top_prediction: item.disease_name || topPred.class_name || 'Unknown',
+                top_confidence: item.confidence ?? topPred.confidence ?? 0,
+                health_score: item.health_score,
+              },
+              reasoning: item.treatment ? {
+                disease_key: (item.disease_name || '').toLowerCase().replace(/[\s/]+/g, '_'),
+                disease_name: item.disease_name || topPred.class_name || 'Unknown',
+                confidence: item.confidence ?? topPred.confidence ?? 0,
+                treatment: Array.isArray(item.treatment) ? item.treatment : [],
+                evidence: Array.isArray(item.evidence) ? item.evidence : [],
+                symptoms_matched: [],
+                symptoms_detected: [],
+                reasoning_chain: [],
+                rejections: [],
+                differential_diagnosis: [],
+                urgency: null,
+                yield_loss: null,
+              } : null,
               ensemble: {
                 ensemble_health_score: item.health_score,
                 ensemble_risk_level: item.risk_level,
                 models_used: ['Classifier', 'YOLO Detection'],
               },
+              processing_time_ms: item.processing_time_ms,
               filename: item.filename,
             })
             setImagePreview(item.annotated_image || item.original_image)

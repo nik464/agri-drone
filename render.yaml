@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: agri-drone-api
+    runtime: docker
+    repo: https://github.com/Ashut0sh-mishra/agri-drone
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    envVars:
+      - key: API_HOST
+        value: 0.0.0.0
+      - key: API_PORT
+        value: 10000
+      - key: DEVICE
+        value: cpu
+      - key: DRY_RUN
+        value: "False"
+      - key: DEBUG
+        value: "False"
+      - key: LOG_LEVEL
+        value: INFO
+    healthCheckPath: /health

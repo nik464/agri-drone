@@ -37,7 +37,11 @@ COPY scripts ./scripts
 COPY tests ./tests
 COPY evaluate ./evaluate
 COPY configs ./configs
+COPY models ./models
 RUN pip install -e .
 
-# Default command runs the full CI gate.
-CMD ["bash", "-lc", "ruff check . && pytest -q tests/regression && python scripts/smoke_test.py"]
+# Expose port (Render uses 10000 by default, configurable via $PORT)
+EXPOSE 10000
+
+# Default: run the API server. Render sets $PORT automatically.
+CMD ["sh", "-c", "python -m uvicorn agridrone.api.app:get_app --factory --host 0.0.0.0 --port ${PORT:-10000}"]

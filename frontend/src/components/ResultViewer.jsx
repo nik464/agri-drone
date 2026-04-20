@@ -184,6 +184,8 @@ export default function ResultViewer({
 
   // ── REJECTION: Not a plant image ──
   if (result.rejected) {
+    const sp = result.spectral || {}
+    const hasSpectral = sp.vari != null || sp.gli != null
     return (
       <div className="space-y-6">
         <div style={{
@@ -195,7 +197,7 @@ export default function ResultViewer({
         }}>
           <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>🚫</div>
           <h2 style={{ color: '#f59e0b', fontSize: '1.5rem', fontWeight: 700, marginBottom: '0.75rem' }}>
-            Not a Plant Image
+            Not a Crop Image
           </h2>
           <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem', lineHeight: 1.6, maxWidth: '500px', margin: '0 auto 1.5rem' }}>
             {result.rejection_reason || 'This image does not appear to contain a plant or crop. Please upload a photo of a crop leaf, plant, or agricultural field.'}
@@ -216,6 +218,31 @@ export default function ResultViewer({
               Green pixels: <span style={{ color: '#22c55e', fontWeight: 600 }}>{((result.green_ratio || 0) * 100).toFixed(1)}%</span>
             </div>
           </div>
+          {hasSpectral && (
+            <div style={{
+              display: 'inline-flex',
+              gap: '1.25rem',
+              background: 'rgba(0,0,0,0.3)',
+              borderRadius: '10px',
+              padding: '0.6rem 1.2rem',
+              marginBottom: '1rem',
+              flexWrap: 'wrap',
+              justifyContent: 'center',
+            }}>
+              {[
+                { label: 'VARI', val: sp.vari },
+                { label: 'GLI', val: sp.gli },
+                { label: 'ExG', val: sp.exg },
+                { label: 'NGRDI', val: sp.ngrdi },
+              ].filter(x => x.val != null).map(x => (
+                <div key={x.label} style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                  {x.label}: <span style={{ color: x.val < 0 ? '#ef4444' : x.val < 0.04 ? '#f59e0b' : '#22c55e', fontWeight: 600 }}>
+                    {x.val.toFixed(3)}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
           {result.image && (
             <div style={{ marginTop: '1rem' }}>
               <img
@@ -314,7 +341,7 @@ export default function ResultViewer({
   const fusedConfidence = hasStructured ? s.confidence_breakdown?.fused_confidence : null
 
   // ── Reasoning chain ──
-  const reasoningChain = hasStructured ? s.reasoning_chain : (hasReasoning ? result.reasoning.reasoning_chain : [])
+  const reasoningChain = hasStructured ? (s.reasoning_chain || []) : (hasReasoning ? (result.reasoning.reasoning_chain || []) : [])
 
   // ── Rejected diagnoses ──
   const rejected = hasStructured ? (s.rejected_diagnoses || []) : (hasReasoning ? (result.reasoning.rejections || []) : [])
