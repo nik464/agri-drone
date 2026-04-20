@@ -22,7 +22,7 @@ torchvision==0.26.0
 ultralytics==8.3.214
 
 # FastAPI backend
-fastapi==0.121.1
+fastapi==0.136.0
 uvicorn==0.44.0
 
 # Tests + lint (Step 1 safety net)
