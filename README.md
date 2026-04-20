@@ -169,7 +169,7 @@ agri-drone/
 
 ### AgriDrone Dashboard — Live Disease Detection
 
-<p align="center">
+<!-- <p align="center">
   <img src="docs/screenshots/dashboard_1.png" alt="Dashboard - Detection View 1" width="90%"/>
 </p>
 <p align="center">
@@ -177,7 +177,7 @@ agri-drone/
 </p>
 <p align="center">
   <img src="docs/screenshots/dashboard_3.png" alt="Dashboard - Detection View 3" width="90%"/>
-</p>
+</p> -->
 
 > Real-time wheat and rice disease detection with Grad-CAM explainability, field health score, confidence breakdown, AI reasoning chain, and treatment recommendations.
 
