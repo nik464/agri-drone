@@ -1,0 +1,5 @@
+# Trivy ignore file — suppress known false positives
+# Format: one vulnerability ID or secret-rule ID per line
+
+# Ignore test/example files that are not real secrets
+# Add specific rule IDs here as needed

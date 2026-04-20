@@ -7,9 +7,6 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 5
-    labels:
-      - "dependencies"
-      - "security"
     reviewers:
       - "Ashut0sh-mishra"
     commit-message:
@@ -22,9 +19,6 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 3
-    labels:
-      - "ci"
-      - "dependencies"
     reviewers:
       - "Ashut0sh-mishra"
     commit-message:
