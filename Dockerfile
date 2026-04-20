@@ -40,8 +40,8 @@ COPY configs ./configs
 COPY models ./models
 RUN pip install -e .
 
-# Expose port (Render uses 10000 by default, configurable via $PORT)
-EXPOSE 10000
+# Expose port (HF Spaces uses 7860, Render uses 10000)
+EXPOSE 7860
 
-# Default: run the API server. Render sets $PORT automatically.
-CMD ["sh", "-c", "python -m uvicorn agridrone.api.app:get_app --factory --host 0.0.0.0 --port ${PORT:-10000}"]
+# Default: run the API server. Platform sets $PORT automatically.
+CMD ["sh", "-c", "python -m uvicorn agridrone.api.app:get_app --factory --host 0.0.0.0 --port ${PORT:-7860}"]
