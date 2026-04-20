@@ -27,7 +27,7 @@ uvicorn==0.39.0
 
 # Tests + lint (Step 1 safety net)
 pytest==9.0.2
-ruff==0.14.4
+ruff==0.15.11
 
 # Scientific / statistical utilities (Step 5)
 scipy==1.16.0
