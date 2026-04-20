@@ -1,0 +1,42 @@
+name: Deploy to HuggingFace Spaces
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'configs/**'
+      - 'models/**'
+      - 'Dockerfile'
+      - 'pyproject.toml'
+      - 'requirements.lock.txt'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout GitHub repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          lfs: true
+
+      - name: Push to HuggingFace Spaces
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+
+          # Create a deploy branch with only the files HF Spaces needs
+          git checkout -b hf-deploy
+
+          # Swap README and Dockerfile with HF-specific versions
+          cp deploy/hf-readme.md README.md
+          cp deploy/Dockerfile.hf Dockerfile
+          git add README.md Dockerfile
+          git commit -m "deploy: swap README + Dockerfile for HF Spaces" --allow-empty
+
+          # Push to HuggingFace Spaces
+          git remote add hf https://ashu010:${HF_TOKEN}@huggingface.co/spaces/ashu010/agri-drone-api
+          git push hf hf-deploy:main --force
