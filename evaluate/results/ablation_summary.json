@@ -41,6 +41,7 @@
   "config_A_mean_latency_ms": 15.4,
   "config_B_mean_latency_ms": 444.4,
   "config_C_mean_latency_ms": 392.3,
-  "n_test_images": 935,
-  "n_classes": 21
+  "n_test_images": 934,
+  "n_classes": 21,
+  "_fix_note": "Corrected from 935 to 934 (off-by-one fix)"
 }

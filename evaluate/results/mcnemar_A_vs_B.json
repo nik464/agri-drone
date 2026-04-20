@@ -1,0 +1,14 @@
+{
+  "comparison": "A_yolo_only vs B_yolo_rules",
+  "n_test_images": 934,
+  "n11_both_correct": 894,
+  "n10_A_correct_B_wrong": 4,
+  "n01_A_wrong_B_correct": 0,
+  "n00_both_wrong": 36,
+  "discordant_pairs": 4,
+  "chi2_statistic": 2.25,
+  "p_value": 0.133614,
+  "significant_005": false,
+  "significant_001": false,
+  "method": "chi2_continuity_corrected"
+}

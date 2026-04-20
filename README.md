@@ -2,14 +2,16 @@
 
 # 🌾 AgriDrone
 
-### A Systematic Ablation Study of Hybrid Deep-Learning Pipelines for Drone-Based Crop Disease Detection in Indian Wheat and Rice
+### A Negative Result on Hand-Authored Symbolic Rules for CNN-Based Crop-Disease Classification
 
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.104+-green.svg)](https://fastapi.tiangolo.com/)
 [![YOLOv8](https://img.shields.io/badge/YOLOv8-Ultralytics-purple.svg)](https://github.com/ultralytics/ultralytics)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Status: Research Prototype](https://img.shields.io/badge/status-research%20prototype-orange.svg)](CHANGELOG_RESEARCH_UPGRADE.md)
-[![Paper](https://img.shields.io/badge/Paper-Smart%20Agri%20Tech-red.svg)](RESEARCH_PAPER_FINAL_v3.md)
+[![Paper](https://img.shields.io/badge/Paper-Manuscript-red.svg)](MANUSCRIPT_SUBMISSION_VERSION.md)
+
+**Live Demo:** [agri-drone-frontend.vercel.app](https://agri-drone-frontend.vercel.app) | **API:** [ashu010-agri-drone-api.hf.space](https://ashu010-agri-drone-api.hf.space)
 
 </div>
 
@@ -18,10 +20,10 @@
 > **Project Status: Research Prototype.** This is a research codebase, not a
 > production system. All reported numbers are validated on curated close-up
 > leaf photographs; they are **not** a claim of field-ready drone deployment.
-> See [Known Limitations](#known-limitations) and
-> [Research Roadmap](#research-roadmap) below.
+> See [Repository Status and Evidence Scope](#repository-status-and-evidence-scope) and
+> [Known Limitations](#known-limitations) below.
 
-AgriDrone is a research codebase that combines a YOLOv8n-cls classifier (1.44M parameters), a six-rule symptom reasoning engine, Bayesian ensemble voting, Grad-CAM explainability, and an expected monetary loss (EML) estimator for **21 Indian wheat and rice disease classes**. Through a three-configuration ablation study on 935 curated close-up leaf images, we show that the standalone YOLO classifier (96.15% accuracy, 15 ms) is statistically indistinguishable from the full hybrid pipeline (95.72%, 444 ms) — the rule engine adds 29× latency with zero accuracy gain. The v4 paper extends this to a multi-architecture matrix and re-audits the baseline under a shared training recipe; the core message is: **ablate before you complicate.**
+AgriDrone is a research codebase that combines a YOLOv8n-cls classifier (1.44M parameters), a multi-stage symptom reasoning engine, and an expected monetary loss (EML) estimator for **21 Indian wheat and rice disease classes**. Through a three-configuration ablation study on **934** curated close-up leaf images, we show that the standalone YOLO classifier (96.15% accuracy, 15 ms) is statistically indistinguishable from the full hybrid pipeline (95.72%, 444 ms; McNemar p = 0.134) — the rule engine adds 29× latency with zero accuracy gain and inflates EML by 840%. The core message: **ablate before you complicate.**
 
 ## Key Results
 
@@ -29,12 +31,47 @@ AgriDrone is a research codebase that combines a YOLOv8n-cls classifier (1.44M p
 |:---|:---:|:---:|:---:|:---:|
 | **Config A** — YOLO-only | **96.15%** | **0.962** | **0.960** | **15 ms** |
 | **Config B** — YOLO + Rules | 95.72% | 0.957 | 0.955 | 444 ms |
-| **Config C** — Rules-only | 13.41% | 0.077 | 0.096 | 392 ms |
+| **Config C** — Rules-only | 13.38% | 0.077 | 0.096 | 392 ms |
 
+- Test set: **934 images**, 21 classes (n=934 in manifest; 933 successfully predicted)
 - McNemar's test: χ² = 2.25, *p* = 0.134 (A vs B — **not significant**)
-- Cross-dataset (PDT, 672 images): 84.4% accuracy, F1 = 0.915, 100% disease recall
-- Sensitivity analysis: 125 weight configs, macro-F1 σ = 0.0087
-- EML: ₹294.33 (Config A) vs ₹2,769.06 (Config B) — 9.4× cost gap
+- Override analysis: 7 total A→B prediction changes — 0 rescues, 4 corruptions, 3 neutral
+- EML: ₹294.33 (Config A) vs ₹2,769.06 (Config B) — **+840% cost gap**
+- No train/test leakage detected (see `LEAKAGE_INVESTIGATION_REPORT.md`)
+
+## Repository Status and Evidence Scope
+
+**This repository supports ONE fully executed experiment and several planned-but-unexecuted extensions.**
+
+### Executed and validated (safe to cite)
+| Experiment | Evidence files |
+|---|---|
+| Three-config ablation (A/B/C) on 934 images | `evaluate/results/predictions_{A,B,C}_*.csv`, `ablation_summary.json` |
+| Bootstrap CIs + McNemar (10,000 replicates) | `evaluate/results/statistical_tests.json` |
+| EML cost analysis (ICAR/DAE cost matrix) | `evaluate/results/eml_summary.json` |
+| Override decomposition (7 overrides analyzed) | `evaluate/results/override_decomposition.json` |
+| Cross-dataset PDT (672 images, 84.4% acc) | `evaluate/results/cross_dataset_PDT.json` |
+| 125-config weight sensitivity | `evaluate/results/sensitivity_results.csv` |
+| Robustness / noise pipeline | `evaluate/results/robustness_summary.json` |
+| Leakage investigation (no leakage found) | `LEAKAGE_INVESTIGATION_REPORT.md` |
+
+### Planned but NOT executed (infrastructure only)
+| Experiment | Status |
+|---|---|
+| 54-cell multi-backbone matrix (`configs/matrix/large.yaml`) | Config exists; **no training runs executed** |
+| 2400-cell full matrix (`configs/matrix/full.yaml`) | Dry-run stubs only (`evaluate/results/v2/matrix/`) |
+| Fair EfficientNet-B0 baseline audit | Dry-run placeholder |
+| Dietterich 5×2cv test | Null placeholder |
+| Paper-2 45-cell matrix (`configs/matrix/paper2.yaml`) | Not started |
+
+### Quarantined artefacts (broken/misleading)
+See `evaluate/results/_quarantined/README.md` for details.
+
+## Current Evidence-Backed Contribution
+
+This repository currently supports a **narrow negative-result finding**: on a 934-image, 21-class curated leaf-photo test set with a single YOLOv8n-cls backbone trained at seed 42, a substantive hand-authored HSV + texture + spatial rule engine adds no measurable accuracy and increases cost by 840% under a smallholder EML model. This is a single datapoint — useful because negative results are systematically under-reported in agri-CV, but it requires multi-backbone and multi-seed validation before generalizing.
+
+The repository also contains substantial infrastructure (matrix runner, cost model, dashboard, multiple rule engine variants) designed for a larger study that has not yet been executed.
 
 ## System Architecture
 
@@ -122,7 +159,7 @@ agri-drone/
 ├── data/                       # Dataset splits (see Data Availability)
 ├── notebooks/                  # Jupyter notebooks
 ├── docs/                       # Additional documentation
-├── RESEARCH_PAPER_FINAL_v3.md  # Submission-ready research paper
+├── MANUSCRIPT_SUBMISSION_VERSION.md # Canonical submission manuscript
 ├── pyproject.toml              # Package configuration
 ├── requirements.txt            # Python dependencies
 └── .env.example                # Environment variable template
@@ -248,7 +285,7 @@ python evaluate/test_4_images.py
 | Script | Key Output Files |
 |:---|:---|
 | `ablation_study.py` | `ablation_summary.json`, `ablation_table.csv`, confusion matrices (PNG) |
-| `statistical_tests.py` | `statistical_tests.json`, `mcnemar.json` |
+| `statistical_tests.py` | `statistical_tests.json` |
 | `pdt_cross_eval.py` | `cross_dataset_PDT.json`, `cross_dataset_PDT_predictions.csv` |
 | `sensitivity_analysis.py` | `sensitivity_summary.json`, `sensitivity_grid.csv` |
 | `eml_analysis.py` | `eml_summary.json`, `eml_comparison.csv`, `eml_bar_chart.png` |
@@ -261,7 +298,7 @@ python evaluate/test_4_images.py
 |:---|:---:|:---:|
 | Train | 4,364 | ~208 |
 | Validation | 935 | ~45 |
-| Test | 935 | ~45 |
+| Test | 934 | ~45 |
 
 Stratified 70/15/15 split with seed = 42.
 
@@ -288,15 +325,12 @@ Stratified 70/15/15 split with seed = 42.
 If you use AgriDrone in your research, please cite:
 
 ```bibtex
-@article{agridrone2025,
-  title     = {AgriDrone: A Systematic Ablation Study of Hybrid Deep-Learning
-               Pipelines for Drone-Based Crop Disease Detection in Indian
-               Wheat and Rice},
-  author    = {[Author names]},
-  journal   = {Smart Agricultural Technology},
-  publisher = {Elsevier},
-  year      = {2025},
-  note      = {Under review}
+@article{agridrone2026,
+  title     = {A Negative Result on Hand-Authored Symbolic Rules for
+               CNN-Based Crop-Disease Classification},
+  author    = {Mishra, Ashutosh},
+  year      = {2026},
+  note      = {Workshop paper in preparation}
 }
 ```
 
@@ -314,66 +348,36 @@ This project is licensed under the MIT License — see the [LICENSE](LICENSE) fi
 
 <div align="center">
 
-**[Paper](RESEARCH_PAPER_FINAL_v3.md) · [Installation](#installation) · [Reproduce Results](#reproducing-the-ablation-study) · [Citation](#citation)**
+**[Paper](MANUSCRIPT_SUBMISSION_VERSION.md) · [Installation](#installation) · [Reproduce Results](#reproducing-the-ablation-study) · [Citation](#citation)**
 
 </div>
 
 
 ## Known Limitations
 
-- **Domain mismatch.** All training and test images are curated close-up leaf
-  photographs (PlantVillage, UCI Rice Leaf, Kaggle rice pest). They are **not**
-  drone-altitude aerial imagery of farm canopies. The "drone-based" label in
-  the v3 paper title described the intended deployment, not the evaluation
-  distribution; the v4 paper corrects this framing. See
-  `docs/data_availability.md`.
-- **Cross-dataset PDT result is degenerate at argmax.** The headline v3
-  numbers on the PDT dataset (84.4% accuracy, 100% recall) correspond to the
-  model collapsing to the constant prediction `unhealthy`. At the argmax
-  operating point specificity is 0%. Section §5.4 of the v4 paper and
-  `evaluate/pdt_v2.py` report ROC/PR sweeps, few-shot fine-tuning and
-  calibration as remediation; those numbers are tagged
-  `[TO BE RE-RUN]` until executed on a GPU host.
-- **Baseline recall.** The 76.15% EfficientNet-B0 number reported in v3 was
-  trained with ad-hoc settings that were not matched to the YOLO recipe. A
-  fair re-audit under the shared recipe is implemented in
-  `evaluate/matrix/audit_baseline.py` and will replace the v3 baseline in
-  v4.
-- **Economics.** The legacy EML table was hand-tabulated. The v4 costs file
-  (`configs/economics/india_2025.yaml`) carries per-entry
-  citations; uncited entries are excluded from the headline number and
-  appear only in the sensitivity scenario.
-- **Statistical protocol.** v3 reported a single McNemar test. v4 adds
-  per-class bootstrap CIs, Holm-Bonferroni correction across 21 per-class
-  tests, Dietterich 5×2cv for variance, and Friedman-Nemenyi for ranking
-  backbones in the matrix; see `evaluate/statistical_tests_v2.py`.
+- **Single backbone, single seed.** All headline results use YOLOv8n-cls at seed 42.
+  Multi-backbone comparison is planned but not executed.
+- **Small test set.** n = 934 images, 20–45 per class. Adequate for a workshop
+  paper; insufficient for strong per-class claims.
+- **Lab-quality imagery.** Curated smartphone leaf photos, not field or drone imagery.
+  The "drone" in the project name describes the intended deployment, not the
+  evaluation distribution.
+- **No multiple-comparison correction.** 21 per-class F1 comparisons lack
+  formal Holm-Bonferroni correction. The quarantined correction was broken;
+  regeneration is pending.
+- **Cross-dataset PDT result.** The 84.4% headline collapses to constant
+  "unhealthy" at argmax (specificity = 0%). See threshold sweep in
+  `evaluate/results/v2/pdt/threshold_sweep.json`.
+- **EfficientNet baseline.** The 76.15% number used unequal training settings.
+  The fair re-audit (`evaluate/matrix/audit_baseline.py`) is a dry-run placeholder.
+- **Cost table sensitivity.** EML headline depends on chosen cost parameters.
+  See `configs/economics/india_2025.yaml`.
 
-## Research Roadmap
+## Future Work
 
-The `research-upgrade` branch adds:
-
-1. A regression safety net (`tests/regression`, `scripts/smoke_test.py`,
-   `.github/workflows/ci.yml`).
-2. A reframed paper draft (`RESEARCH_PAPER_v4.md`) that presents the
-   rule-engine result as a negative result and documents data provenance.
-3. A 6×4×5×4×5 experiment matrix
-   (`configs/matrix/full.yaml`, `evaluate/matrix/run_matrix.py`).
-4. A fair EfficientNet-B0 re-audit under a shared training recipe.
-5. The expanded statistical protocol above.
-6. A PDT rescue pipeline (threshold sweep, few-shot, calibration).
-7. Learned and LLM-generated rule baselines
-   (`rule_engine_base.py`, `rules_learned.py`, `rules_llm.py`) that
-   share a common `RuleEngine` protocol with the existing handcrafted
-   engine, which remains the default.
-8. Cited, sensitivity-aware economics
-   (`configs/economics/india_2025.yaml`, `evaluate/eml_sensitivity.py`).
-9. Reproducibility bundle (`scripts/download_data.py`,
-   `scripts/make_splits.py`, `CITATION.cff`, `requirements.lock.txt`,
-   `Dockerfile`, `docker-compose.yml`, `docs/data_availability.md`).
-10. Repo hygiene: this README, `CHANGELOG_RESEARCH_UPGRADE.md`, and a PR
-    description.
-
-Artifacts under `evaluate/results/v2/` tagged `[TO BE RE-RUN]` require a
-GPU host to materialise the real numbers. The scaffolding, schemas, and CLI
-all run end-to-end on CPU today, which is what makes the upgrade safe: every
-existing v3 result file is preserved byte-identical.
+1. Execute `configs/matrix/paper2.yaml` (45 cells: 5 backbones × 3 geographies × 3 folds) on Colab/Kaggle.
+2. Collect n ≥ 2,000 additional test images for adequate statistical power.
+3. Regenerate Holm-Bonferroni per-class McNemar from committed A/B CSVs.
+4. Run fair EfficientNet-B0 audit under shared training recipe.
+5. Evaluate learned-rule and LLM-rule variants against the test set.
+6. Collect field-condition drone imagery for realistic deployment evaluation.

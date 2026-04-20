@@ -1,0 +1,9 @@
+manuscript_claim,evidence,status,corrected_value
+Test set size n=935,CSVs have 934 rows,WRONG — actual n=934,934
+Config A accuracy 96.15%,Recomputed: 0.9615,EXACT,0.9615
+Config B accuracy 95.72%,Recomputed: 0.9572,EXACT,0.9572
+Config C accuracy 13.38%,Recomputed: 0.1338,EXACT,0.1338
+McNemar p≈0.134,Recomputed: p=0.133614,APPROXIMATE,0.133614
+EML A=294.33,eml_summary.json: 294.33,EXACT,294.33
+EML B=2769.06,eml_summary.json: 2769.06,EXACT,2769.06
+"Override decomp: 0 rescues, 4 corruptions","Recomputed: 0 rescues, 4 corruptions",EXACT,"0 rescues, 4 corruptions"

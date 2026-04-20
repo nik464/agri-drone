@@ -1,0 +1,8 @@
+image,ground_truth,pred_A,pred_B,conf_A,conf_B,A_correct,B_correct,category
+aphid_385.png,wheat_aphid,wheat_aphid,wheat_powdery_mildew,0.4318,0.563,1,0,corruption
+brown_rust_1038.png,wheat_brown_rust,wheat_black_rust,wheat_yellow_rust,0.6009,0.51,0,0,neutral_both_wrong
+brown_rust_332.png,wheat_brown_rust,wheat_blast,wheat_black_rust,0.5682,0.524,0,0,neutral_both_wrong
+tan_spot_132.png,wheat_tan_spot,wheat_tan_spot,wheat_black_rust,0.5271,0.526,1,0,corruption
+tan_spot_392.png,wheat_tan_spot,wheat_leaf_blight,wheat_black_rust,0.5239,0.544,0,0,neutral_both_wrong
+tan_spot_402.png,wheat_tan_spot,wheat_tan_spot,wheat_yellow_rust,0.4532,0.504,1,0,corruption
+tan_spot_557.png,wheat_tan_spot,wheat_tan_spot,wheat_mite,0.4895,0.528,1,0,corruption

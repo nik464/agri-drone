@@ -1,0 +1,65 @@
+{
+  "run_id": "full-matrix-v4",
+  "axes": {
+    "backbone": [
+      "yolov8n-cls",
+      "yolov8s-cls",
+      "efficientnet_b0",
+      "convnext_tiny",
+      "mobilenetv3_small",
+      "vit_b_16"
+    ],
+    "rule_engine": [
+      "none",
+      "handcrafted",
+      "learned_tree",
+      "llm_generated"
+    ],
+    "train_fraction": [
+      1.0,
+      0.5,
+      0.25,
+      0.1,
+      0.05
+    ],
+    "dataset": [
+      "indian21",
+      "plantvillage_subset",
+      "plantdoc_subset",
+      "pdt"
+    ],
+    "cv": {
+      "n_folds": 5,
+      "seeds": [
+        42,
+        43,
+        44,
+        45,
+        46
+      ]
+    }
+  },
+  "training_recipe": {
+    "epochs": 50,
+    "batch_size": 32,
+    "optimizer": "adamw",
+    "lr": 0.00125,
+    "weight_decay": 0.0001,
+    "lr_schedule": "cosine",
+    "warmup_epochs": 3,
+    "augmentation": "standard_v1",
+    "early_stopping_patience": 10,
+    "input_size": 224,
+    "label_smoothing": 0.1
+  },
+  "tracker": "none",
+  "output": {
+    "root": "evaluate/results/v2/matrix",
+    "compress_predictions": true
+  },
+  "execution": {
+    "resume": true,
+    "fail_fast": false,
+    "max_parallel_cells": 1
+  }
+}

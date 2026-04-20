@@ -72,15 +72,22 @@ def _detect_faces(image_bgr: np.ndarray) -> list:
 
 
 def _is_plant_image(image_bgr: np.ndarray) -> dict:
-    """Check whether the image likely contains a plant / crop.
+    """Layer 1 — Physics / Spectral Gate.
 
-    Uses:
-    1. OpenCV Haar cascade FACE DETECTION
-    2. Skin pixel detection (catches fingers, hands, arms)
-    3. Green/brown vegetation pixel ratio
+    Rejects non-vegetation images using multi-signal analysis:
+    1. Face detection (Haar cascade)
+    2. Skin-pixel ratio (YCrCb)
+    3. Green + brown vegetation pixel ratio (HSV)
+    4. Largest green blob analysis — a real leaf forms a large connected region
+    5. Achromatic ratio — paper/pens/screens are mostly gray/white/dark
+    6. Spectral vegetation indices (GLI, ExG, RGRI, NGRDI, VARI)
+    7. Texture uniformity — catches green-painted surfaces / artificial turf
 
-    Returns dict with:
-        is_plant (bool), reason (str), green_ratio, face_count, face_area_pct, skin_ratio
+    Core principle: if the image contains a green connected region covering >2%
+    of the frame, it almost certainly contains a real plant → PASS.
+    If there's no meaningful green blob, use spectral + achromatic signals to reject.
+
+    Returns dict with diagnostic signals.
     """
     img_h, img_w = image_bgr.shape[:2]
     total_pixels = img_h * img_w
@@ -104,39 +111,196 @@ def _is_plant_image(image_bgr: np.ndarray) -> dict:
     green_ratio = float(np.count_nonzero(green_mask) / total_pixels)
 
     # ── 4. Brown vegetation (dried leaves, stems, soil) ──
-    brown_veg = (h >= 10) & (h <= 28) & (s > 50) & (v > 40)
+    # Tightened: exclude paper/cardboard by requiring V < 200 and S > 60
+    brown_veg = (h >= 10) & (h <= 28) & (s > 60) & (v > 40) & (v < 200)
     brown_ratio = float(np.count_nonzero(brown_veg) / total_pixels)
     vegetation_ratio = green_ratio + brown_ratio
 
-    # ── Decision logic ──
-    is_plant = True
-    reason = ""
+    # ── 5. Texture uniformity within green region ──
+    texture_std = 0.0
+    green_pixel_count = np.count_nonzero(green_mask)
+    if green_pixel_count > 100:
+        sat_in_green = s[green_mask].astype(np.float32)
+        texture_std = float(np.std(sat_in_green))
 
-    if face_count > 0 and face_area_pct > 0.02:
-        if green_ratio > 0.15:
-            # Face visible but plenty of green — farmer in field, allow
-            is_plant = True
-            logger.info(f"Face detected but high green ({green_ratio:.0%}) — allowing as field photo")
+    # ── 6. Largest green blob — THE key signal ──
+    # A real plant leaf forms a large connected green region.
+    # Paper, pens, office items, random objects have no large green blob.
+    # If the largest green blob covers >2% of the image, it's almost certainly a real plant.
+    largest_green_blob_ratio = 0.0
+    green_coherence = 0.0
+    if green_pixel_count > 100:
+        green_u8 = green_mask.astype(np.uint8) * 255
+        n_labels, _labels, stats, _ = cv2.connectedComponentsWithStats(
+            green_u8, connectivity=8
+        )
+        if n_labels > 1:
+            largest_blob_area = int(stats[1:, cv2.CC_STAT_AREA].max())
+            largest_green_blob_ratio = largest_blob_area / total_pixels
+            green_coherence = largest_blob_area / green_pixel_count
         else:
-            is_plant = False
-            reason = (
-                f"Human face detected ({face_count} face{'s' if face_count > 1 else ''}, "
-                f"covering {face_area_pct:.0%}). Please upload a crop photo."
-            )
-    elif skin_ratio > 0.40 and vegetation_ratio < 0.10:
-        # Mostly skin with very little vegetation — likely a selfie or hand photo
+            green_coherence = 1.0
+
+    has_plant_region = largest_green_blob_ratio > 0.02  # 2% of image
+
+    # ── 7. Achromatic ratio — paper/pen/screens are mostly unsaturated ──
+    # Pixels with S < 25 are gray/white/black (no color → not a plant)
+    achromatic_mask = s < 25
+    achromatic_ratio = float(np.count_nonzero(achromatic_mask) / total_pixels)
+
+    # ── 8. Edge density (diagnostic only, not used for rejection) ──
+    gray = cv2.cvtColor(image_bgr, cv2.COLOR_BGR2GRAY)
+    edges = cv2.Canny(gray, 50, 150)
+    edge_density = float(np.count_nonzero(edges) / total_pixels)
+
+    # ══════════════════════════════════════════════════════════════
+    # DECISION LOGIC
+    # Core principle: default is REJECT. Image must prove it has a plant.
+    # A real plant image has a large connected green region (has_plant_region).
+    # ══════════════════════════════════════════════════════════════
+    is_plant = False  # guilty until proven innocent
+    reason = "No plant or crop features detected in this image."
+
+    # ── D1. HAS a real green plant region → PASS (highest priority) ──
+    # If there's a real leaf blob (>2% of image), it's a plant regardless of
+    # faces, skin, edges, or background complexity. This covers:
+    # - Farmer holding a leaf (hand + plant)
+    # - Plant in an office/lab setting
+    # - Field photo with people in background
+    if has_plant_region:
+        is_plant = True
+        reason = ""
+        logger.info(
+            f"Green plant region found (largest blob {largest_green_blob_ratio:.1%} of image, "
+            f"coherence {green_coherence:.0%}) — accepting as plant"
+        )
+
+    # ── D2. No green blob — check if face/person without plant ──
+    elif face_count > 0 and face_area_pct > 0.01:
         is_plant = False
-        reason = "Image appears to be mostly skin/human. Please upload a crop photo."
-    elif vegetation_ratio < 0.02 and skin_ratio < 0.10:
-        # No vegetation and no skin — could be indoor object, text, etc.
+        reason = (
+            f"Human face detected ({face_count} face{'s' if face_count > 1 else ''}, "
+            f"covering {face_area_pct:.0%}) without a visible crop. "
+            "Please upload a close-up photo of a crop leaf."
+        )
+
+    # ── D3. No green blob, mostly skin → person without plant ──
+    elif skin_ratio > 0.25 and not has_plant_region:
         is_plant = False
-        reason = "No plant or crop features detected in this image."
-    # else: has enough vegetation (green + brown) or plant with some skin (finger holding leaf)
+        reason = (
+            f"Person detected without crop (skin {skin_ratio:.0%}). "
+            "Please upload a crop photo."
+        )
+
+    # ── D4. No green blob + mostly achromatic → paper/pen/screen/wall ──
+    elif achromatic_ratio > 0.50 and not has_plant_region:
+        is_plant = False
+        reason = (
+            f"No plant detected — image is mostly gray/white/dark "
+            f"({achromatic_ratio:.0%} achromatic). Please upload a crop photo."
+        )
+
+    # ── D5. Some scattered vegetation but no cohesive blob → not a crop ──
+    elif vegetation_ratio > 0.03 and not has_plant_region:
+        is_plant = False
+        reason = (
+            f"Some green detected ({green_ratio:.0%}) but no crop leaf region found. "
+            "Please upload a close-up photo of a crop leaf."
+        )
+
+    # ── D6. Fallthrough — no green blob, no special signals → reject ──
+    # Default is already reject (is_plant = False)
+
+    # ── SPECTRAL VEGETATION GATE (hardened with RGRI + texture) ──
+    # Only applies if image passed via blob detection. If has_plant_region,
+    # do NOT let the spectral gate override — real plants can have odd spectral.
+    spectral_info: dict = {}
+    if is_plant and not has_plant_region:
+        try:
+            from ..core.spectral_features import extract_spectral_indices
+            spectral = extract_spectral_indices(image_bgr)
+            vari = spectral.indices.get("VARI")
+            gli = spectral.indices.get("GLI")
+            exg = spectral.indices.get("ExG")
+            ngrdi = spectral.indices.get("NGRDI")
+            rgri = spectral.indices.get("RGRI")
+
+            # Count non-vegetation signals (5 indices now)
+            non_veg_count = 0
+            if vari and vari.mean < 0.10:
+                non_veg_count += 1
+            if gli and gli.mean < 0.01:
+                non_veg_count += 1
+            if exg and exg.mean < 0.02:
+                non_veg_count += 1
+            if ngrdi and ngrdi.mean < 0.01:
+                non_veg_count += 1
+            # RGRI > 1.3 means red dominates green — not healthy vegetation
+            if rgri and rgri.mean > 1.3:
+                non_veg_count += 1
+
+            spectral_info = {
+                "vari": round(vari.mean, 4) if vari else None,
+                "gli": round(gli.mean, 4) if gli else None,
+                "exg": round(exg.mean, 4) if exg else None,
+                "ngrdi": round(ngrdi.mean, 4) if ngrdi else None,
+                "rgri": round(rgri.mean, 4) if rgri else None,
+                "non_veg_signals": non_veg_count,
+                "texture_std": round(texture_std, 2),
+            }
+
+            gli_ok = gli and gli.mean >= 0.01
+            exg_ok = exg and exg.mean >= 0.02
+
+            should_reject = False
+            reject_reason = ""
+
+            # Rule 1: low green + both GLI & ExG fail → not a crop
+            if green_ratio < 0.15 and not gli_ok and not exg_ok:
+                should_reject = True
+                reject_reason = "low green + GLI/ExG both below threshold"
+            # Rule 2: very low green + majority of indices fail
+            elif green_ratio < 0.08 and non_veg_count >= 3:
+                should_reject = True
+                reject_reason = f"very low green + {non_veg_count}/5 non-veg signals"
+            # Rule 3: green is present but texture is too uniform → painted surface
+            elif green_ratio > 0.15 and texture_std < 8.0 and not gli_ok and not exg_ok:
+                should_reject = True
+                reject_reason = f"uniform texture (std={texture_std:.1f}) + spectral fail"
+            # Rule 4: high RGRI (red >> green) with low GLI — necrotic non-plant
+            elif rgri and rgri.mean > 1.5 and not gli_ok and green_ratio < 0.10:
+                should_reject = True
+                reject_reason = f"high RGRI ({rgri.mean:.2f}) + low GLI"
+
+            if should_reject:
+                is_plant = False
+                vals = (
+                    f"VARI={vari.mean:.3f}, GLI={gli.mean:.3f}, "
+                    f"ExG={exg.mean:.3f}, NGRDI={ngrdi.mean:.3f}"
+                )
+                if rgri:
+                    vals += f", RGRI={rgri.mean:.3f}"
+                reason = (
+                    f"Not a crop — {reject_reason}. "
+                    f"Spectral: {vals}. "
+                    "Please upload a photo of a crop leaf or plant."
+                )
+                logger.info(
+                    f"Spectral gate REJECTED: {reject_reason} | "
+                    f"gli_ok={gli_ok} exg_ok={exg_ok} "
+                    f"non_veg={non_veg_count}/5 green={green_ratio:.1%} "
+                    f"texture_std={texture_std:.1f}"
+                )
+        except Exception as e:
+            logger.warning(f"Spectral gatekeeper check failed (non-critical): {e}")
 
     logger.info(
-        f"Plant gatekeeper: faces={face_count} face_area={face_area_pct:.1%} "
+        f"Layer-1 Physics Gate: faces={face_count} face_area={face_area_pct:.1%} "
         f"skin={skin_ratio:.1%} green={green_ratio:.1%} brown={brown_ratio:.1%} "
-        f"→ {'PLANT' if is_plant else 'REJECTED'}"
+        f"texture_std={texture_std:.1f} edge_density={edge_density:.1%} "
+        f"green_coherence={green_coherence:.1%} blob={largest_green_blob_ratio:.1%} "
+        f"achromatic={achromatic_ratio:.1%} has_plant={has_plant_region} "
+        f"→ {'PASS' if is_plant else 'REJECT'}"
     )
     return {
         "is_plant": is_plant,
@@ -145,7 +309,34 @@ def _is_plant_image(image_bgr: np.ndarray) -> dict:
         "face_count": face_count,
         "face_area_pct": round(face_area_pct, 4),
         "skin_ratio": round(skin_ratio, 4),
+        "edge_density": round(edge_density, 4),
+        "green_coherence": round(green_coherence, 4),
+        "largest_green_blob_ratio": round(largest_green_blob_ratio, 4),
+        "achromatic_ratio": round(achromatic_ratio, 4),
+        "has_plant_region": has_plant_region,
+        **spectral_info,
     }
+
+
+MIN_IMAGE_DIM = 32  # Minimum pixels on shortest side for meaningful classification
+
+
+def _check_minimum_size(image: np.ndarray) -> dict | None:
+    """Return rejection dict if image is too small for meaningful classification, else None."""
+    h, w = image.shape[:2]
+    if min(h, w) < MIN_IMAGE_DIM:
+        return {
+            "rejected": True,
+            "is_plant": False,
+            "rejection_reason": (
+                f"Image too small ({w}x{h} px). "
+                f"Minimum {MIN_IMAGE_DIM}x{MIN_IMAGE_DIM} px required for crop disease analysis."
+            ),
+            "rejection_layer": 0,
+            "width": w,
+            "height": h,
+        }
+    return None
 
 
 def _resize_if_large(image: np.ndarray, max_dim: int = MAX_IMAGE_DIM) -> np.ndarray:
@@ -450,7 +641,12 @@ def _get_classifier():
 
 
 def _classify_image(image_bgr: np.ndarray) -> dict | None:
-    """Run the trained classifier on the image, return top predictions."""
+    """Run the trained classifier on the image, return top predictions.
+
+    Also stores the raw probs tensor in the result under '_raw_probs' so
+    that the crop-type gate (Layer 2) can inspect the full softmax
+    distribution without a second forward pass.
+    """
     model, names = _get_classifier()
     if model is None:
         return None
@@ -531,9 +727,46 @@ def _classify_image(image_bgr: np.ndarray) -> dict | None:
             "disease_probability": round(disease_prob, 4),
             "top5": predictions,
             "model": "india_agri_cls.pt (YOLOv8n-cls, 21 crop diseases)",
+            "_raw_probs": probs,  # Layer 2 crop-type gate consumes this
         }
     except Exception as exc:
         logger.warning(f"Classifier inference failed: {exc}")
+        return None
+
+
+def _run_crop_type_gate(classifier_result: dict | None) -> dict | None:
+    """Layer 2 — Crop-Type Gate.
+
+    Uses the softmax distribution from the 21-class classifier to determine
+    whether the image is wheat, rice, or an unknown/unsupported crop.
+    Returns None if the classifier didn't run, otherwise a dict with gate info.
+    """
+    if classifier_result is None:
+        return None
+    raw_probs = classifier_result.get("_raw_probs")
+    if raw_probs is None:
+        return None
+    _, names = _get_classifier()
+    if names is None:
+        return None
+    try:
+        from ..core.crop_type_gate import classify_crop_type
+        gate = classify_crop_type(names, raw_probs)
+        return {
+            "crop_type": gate.crop_type,
+            "accepted": gate.accepted,
+            "confidence": gate.confidence,
+            "wheat_prob": gate.wheat_prob,
+            "rice_prob": gate.rice_prob,
+            "entropy": gate.entropy,
+            "normalised_entropy": gate.normalised_entropy,
+            "top1_class": gate.top1_class,
+            "top1_confidence": gate.top1_confidence,
+            "cross_group_top5": gate.cross_group_top5,
+            "reason": gate.reason,
+        }
+    except Exception as exc:
+        logger.warning(f"Crop-type gate failed (non-fatal): {exc}")
         return None
 
 
@@ -897,6 +1130,12 @@ def create_app() -> FastAPI:
             if image is None:
                 raise HTTPException(status_code=400, detail="Failed to decode image")
 
+            # Reject images too small for meaningful classification
+            size_reject = _check_minimum_size(image)
+            if size_reject:
+                logger.warning(f"REJECTED tiny image: {file.filename} shape={image.shape}")
+                return size_reject
+
             # Downsize large images for faster inference
             image = _resize_if_large(image)
             img_hash = _image_hash(image)
@@ -930,6 +1169,12 @@ def create_app() -> FastAPI:
                     "face_count": plant_check.get("face_count", 0),
                     "face_area_pct": plant_check.get("face_area_pct", 0),
                     "vegetation_ratio": plant_check.get("green_ratio", 0),
+                    "spectral": {
+                        "vari": plant_check.get("vari"),
+                        "gli": plant_check.get("gli"),
+                        "exg": plant_check.get("exg"),
+                        "ngrdi": plant_check.get("ngrdi"),
+                    },
                     "classifier_top_confidence": 0,
                     "image": image_b64_dataurl,
                     "filename": file.filename,
@@ -941,12 +1186,55 @@ def create_app() -> FastAPI:
                         "ensemble_risk_level": "none",
                         "model_agreement": "rejected",
                         "note": "Image rejected — does not appear to be a plant/crop",
-                        "models_used": ["Plant Gatekeeper"],
+                        "models_used": ["Plant Gatekeeper", "Spectral Verification"],
                     },
                 }
 
             # ── Model 1: Trained Classifier (21 crop disease classes) ── FAST ~100ms
             classifier_result = _classify_image(image)
+
+            # ── Layer 2: Crop-Type Gate ──
+            # Uses the classifier's full softmax distribution to determine
+            # wheat vs rice vs unknown. Rejects OOD crops (corn, tomato, etc.)
+            # that passed the physics gate but aren't wheat or rice.
+            crop_gate_result = _run_crop_type_gate(classifier_result)
+            if crop_gate_result and not crop_gate_result["accepted"]:
+                processing_time = (time.time() - start_time) * 1000
+                logger.warning(
+                    f"Layer-2 REJECTED: {file.filename} — {crop_gate_result['reason']}"
+                )
+                return {
+                    "rejected": True,
+                    "is_plant": True,
+                    "rejection_layer": 2,
+                    "rejection_reason": crop_gate_result["reason"],
+                    "crop_gate": crop_gate_result,
+                    "classifier_top_prediction": classifier_result.get("top_prediction", "") if classifier_result else "",
+                    "classifier_top_confidence": classifier_result.get("top_confidence", 0) if classifier_result else 0,
+                    "image": image_b64_dataurl,
+                    "filename": file.filename,
+                    "processing_time_ms": processing_time,
+                    "structured": None,
+                    "detections": [],
+                    "ensemble": {
+                        "ensemble_health_score": 0,
+                        "ensemble_risk_level": "none",
+                        "model_agreement": "rejected",
+                        "note": f"Image rejected — {crop_gate_result['reason']}",
+                        "models_used": ["Layer-1 Physics Gate", "Layer-2 Crop-Type Gate"],
+                    },
+                }
+            # Override crop_type from form with auto-detected crop type
+            if crop_gate_result and crop_gate_result["accepted"]:
+                detected_crop = crop_gate_result["crop_type"]
+                if detected_crop in ("wheat", "rice") and crop_type == "wheat":
+                    # Auto-correct: user may have left default "wheat" but image is rice
+                    crop_type = detected_crop
+                    logger.info(f"Layer-2 auto-detected crop_type={detected_crop}")
+
+            # Strip internal _raw_probs from classifier_result before serialisation
+            if classifier_result and "_raw_probs" in classifier_result:
+                del classifier_result["_raw_probs"]
 
             # ── Model 1b: Uncertainty Quantification (MC-Dropout) ──
             uncertainty_data = None
@@ -1277,6 +1565,13 @@ def create_app() -> FastAPI:
                     classifier_result is not None
                     and classifier_result.get("top_confidence", 1.0) < 0.40
                 ),
+                "defense_layers": {
+                    "layer_1_physics_gate": "pass",
+                    "layer_2_crop_type_gate": crop_gate_result.get("crop_type", "unknown") if crop_gate_result else "skipped",
+                    "layer_2_confidence": crop_gate_result.get("confidence", 0) if crop_gate_result else 0,
+                    "layer_3_disease_classifier": classifier_result.get("top_prediction", "") if classifier_result else "skipped",
+                },
+                "crop_gate": crop_gate_result,
                 "structured": structured,
                 "detections": detections,
                 "image": image_b64_dataurl,
@@ -2067,6 +2362,13 @@ def create_app() -> FastAPI:
                     summary["rejected_count"] += 1
                     continue
 
+                size_reject = _check_minimum_size(image)
+                if size_reject:
+                    size_reject.update({"index": idx, "filename": file.filename})
+                    results.append(size_reject)
+                    summary["rejected_count"] += 1
+                    continue
+
                 image = _resize_if_large(image)
 
                 # Plant check
@@ -2229,6 +2531,11 @@ def create_app() -> FastAPI:
 
                 frame = _resize_if_large(frame)
                 timestamp_sec = round(frame_idx / fps, 2) if fps > 0 else 0
+
+                # Skip frames too small for classification
+                if _check_minimum_size(frame):
+                    frame_idx += frame_interval
+                    continue
 
                 # Plant check (skip non-plant frames silently)
                 plant_check = _is_plant_image(frame)

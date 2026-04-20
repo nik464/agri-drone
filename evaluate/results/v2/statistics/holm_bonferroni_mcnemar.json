@@ -1,259 +1,240 @@
 {
-  "family_size": 21,
-  "method": "holm_bonferroni",
-  "per_class": [
-    {
-      "class": "healthy_rice",
+  "method": "Holm-Bonferroni corrected per-class McNemar",
+  "comparison": "A_yolo_only vs B_yolo_rules",
+  "n_classes": 21,
+  "n_significant_corrected": 0,
+  "n_test_images": 934,
+  "per_class": {
+    "healthy_rice": {
+      "n_samples": 45,
+      "n01": 0,
+      "n10": 0,
+      "discordant": 0,
       "chi2": 0.0,
-      "p_value": 1.0,
-      "discordant_pairs": 0,
-      "b_right_c_wrong": 0,
-      "b_wrong_c_right": 0,
-      "both_right": 45,
-      "both_wrong": 0,
-      "holm_alpha": 0.0025,
-      "holm_significant_05": false
+      "p_raw": 1.0,
+      "p_adjusted": 1.0,
+      "significant_005_corrected": false,
+      "holm_rank": 2
     },
-    {
-      "class": "healthy_wheat",
+    "healthy_wheat": {
+      "n_samples": 45,
+      "n01": 0,
+      "n10": 0,
+      "discordant": 0,
       "chi2": 0.0,
-      "p_value": 1.0,
-      "discordant_pairs": 0,
-      "b_right_c_wrong": 0,
-      "b_wrong_c_right": 0,
-      "both_right": 43,
-      "both_wrong": 2,
-      "holm_alpha": 0.002632,
-      "holm_significant_05": false
+      "p_raw": 1.0,
+      "p_adjusted": 1.0,
+      "significant_005_corrected": false,
+      "holm_rank": 3
     },
-    {
-      "class": "rice_bacterial_blight",
+    "rice_bacterial_blight": {
+      "n_samples": 45,
+      "n01": 0,
+      "n10": 0,
+      "discordant": 0,
       "chi2": 0.0,
-      "p_value": 1.0,
-      "discordant_pairs": 0,
-      "b_right_c_wrong": 0,
-      "b_wrong_c_right": 0,
-      "both_right": 45,
-      "both_wrong": 0,
-      "holm_alpha": 0.002778,
-      "holm_significant_05": false
+      "p_raw": 1.0,
+      "p_adjusted": 1.0,
+      "significant_005_corrected": false,
+      "holm_rank": 4
     },
-    {
-      "class": "rice_blast",
+    "rice_blast": {
+      "n_samples": 45,
+      "n01": 0,
+      "n10": 0,
+      "discordant": 0,
       "chi2": 0.0,
-      "p_value": 1.0,
-      "discordant_pairs": 0,
-      "b_right_c_wrong": 0,
-      "b_wrong_c_right": 0,
-      "both_right": 44,
-      "both_wrong": 1,
-      "holm_alpha": 0.002941,
-      "holm_significant_05": false
+      "p_raw": 1.0,
+      "p_adjusted": 1.0,
+      "significant_005_corrected": false,
+      "holm_rank": 5
     },
-    {
-      "class": "rice_brown_spot",
+    "rice_brown_spot": {
+      "n_samples": 45,
+      "n01": 0,
+      "n10": 0,
+      "discordant": 0,
       "chi2": 0.0,
-      "p_value": 1.0,
-      "discordant_pairs": 0,
-      "b_right_c_wrong": 0,
-      "b_wrong_c_right": 0,
-      "both_right": 45,
-      "both_wrong": 0,
-      "holm_alpha": 0.003125,
-      "holm_significant_05": false
+      "p_raw": 1.0,
+      "p_adjusted": 1.0,
+      "significant_005_corrected": false,
+      "holm_rank": 6
     },
-    {
-      "class": "rice_leaf_scald",
+    "rice_leaf_scald": {
+      "n_samples": 45,
+      "n01": 0,
+      "n10": 0,
+      "discordant": 0,
       "chi2": 0.0,
-      "p_value": 1.0,
-      "discordant_pairs": 0,
-      "b_right_c_wrong": 0,
-      "b_wrong_c_right": 0,
-      "both_right": 42,
-      "both_wrong": 3,
-      "holm_alpha": 0.003333,
-      "holm_significant_05": false
+      "p_raw": 1.0,
+      "p_adjusted": 1.0,
+      "significant_005_corrected": false,
+      "holm_rank": 7
     },
-    {
-      "class": "rice_sheath_blight",
+    "rice_sheath_blight": {
+      "n_samples": 45,
+      "n01": 0,
+      "n10": 0,
+      "discordant": 0,
       "chi2": 0.0,
-      "p_value": 1.0,
-      "discordant_pairs": 0,
-      "b_right_c_wrong": 0,
-      "b_wrong_c_right": 0,
-      "both_right": 45,
-      "both_wrong": 0,
-      "holm_alpha": 0.003571,
-      "holm_significant_05": false
+      "p_raw": 1.0,
+      "p_adjusted": 1.0,
+      "significant_005_corrected": false,
+      "holm_rank": 8
     },
-    {
-      "class": "wheat_aphid",
+    "wheat_aphid": {
+      "n_samples": 45,
+      "n01": 0,
+      "n10": 1,
+      "discordant": 1,
       "chi2": 0.0,
-      "p_value": 1.0,
-      "discordant_pairs": 1,
-      "b_right_c_wrong": 1,
-      "b_wrong_c_right": 0,
-      "both_right": 41,
-      "both_wrong": 3,
-      "holm_alpha": 0.003846,
-      "holm_significant_05": false
+      "p_raw": 1.0,
+      "p_adjusted": 1.0,
+      "significant_005_corrected": false,
+      "holm_rank": 9
     },
-    {
-      "class": "wheat_black_rust",
+    "wheat_black_rust": {
+      "n_samples": 45,
+      "n01": 0,
+      "n10": 0,
+      "discordant": 0,
       "chi2": 0.0,
-      "p_value": 1.0,
-      "discordant_pairs": 0,
-      "b_right_c_wrong": 0,
-      "b_wrong_c_right": 0,
-      "both_right": 42,
-      "both_wrong": 3,
-      "holm_alpha": 0.004167,
-      "holm_significant_05": false
+      "p_raw": 1.0,
+      "p_adjusted": 1.0,
+      "significant_005_corrected": false,
+      "holm_rank": 10
     },
-    {
-      "class": "wheat_blast",
+    "wheat_blast": {
+      "n_samples": 45,
+      "n01": 0,
+      "n10": 0,
+      "discordant": 0,
       "chi2": 0.0,
-      "p_value": 1.0,
-      "discordant_pairs": 0,
-      "b_right_c_wrong": 0,
-      "b_wrong_c_right": 0,
-      "both_right": 43,
-      "both_wrong": 2,
-      "holm_alpha": 0.004545,
-      "holm_significant_05": false
+      "p_raw": 1.0,
+      "p_adjusted": 1.0,
+      "significant_005_corrected": false,
+      "holm_rank": 11
     },
-    {
-      "class": "wheat_brown_rust",
+    "wheat_brown_rust": {
+      "n_samples": 45,
+      "n01": 0,
+      "n10": 0,
+      "discordant": 0,
       "chi2": 0.0,
-      "p_value": 1.0,
-      "discordant_pairs": 0,
-      "b_right_c_wrong": 0,
-      "b_wrong_c_right": 0,
-      "both_right": 38,
-      "both_wrong": 7,
-      "holm_alpha": 0.005,
-      "holm_significant_05": false
+      "p_raw": 1.0,
+      "p_adjusted": 1.0,
+      "significant_005_corrected": false,
+      "holm_rank": 12
     },
-    {
-      "class": "wheat_fusarium_head_blight",
+    "wheat_fusarium_head_blight": {
+      "n_samples": 45,
+      "n01": 0,
+      "n10": 0,
+      "discordant": 0,
       "chi2": 0.0,
-      "p_value": 1.0,
-      "discordant_pairs": 0,
-      "b_right_c_wrong": 0,
-      "b_wrong_c_right": 0,
-      "both_right": 44,
-      "both_wrong": 1,
-      "holm_alpha": 0.005556,
-      "holm_significant_05": false
+      "p_raw": 1.0,
+      "p_adjusted": 1.0,
+      "significant_005_corrected": false,
+      "holm_rank": 13
     },
-    {
-      "class": "wheat_leaf_blight",
+    "wheat_leaf_blight": {
+      "n_samples": 45,
+      "n01": 0,
+      "n10": 0,
+      "discordant": 0,
       "chi2": 0.0,
-      "p_value": 1.0,
-      "discordant_pairs": 0,
-      "b_right_c_wrong": 0,
-      "b_wrong_c_right": 0,
-      "both_right": 41,
-      "both_wrong": 4,
-      "holm_alpha": 0.00625,
-      "holm_significant_05": false
+      "p_raw": 1.0,
+      "p_adjusted": 1.0,
+      "significant_005_corrected": false,
+      "holm_rank": 14
     },
-    {
-      "class": "wheat_mite",
+    "wheat_mite": {
+      "n_samples": 45,
+      "n01": 0,
+      "n10": 0,
+      "discordant": 0,
       "chi2": 0.0,
-      "p_value": 1.0,
-      "discordant_pairs": 0,
-      "b_right_c_wrong": 0,
-      "b_wrong_c_right": 0,
-      "both_right": 45,
-      "both_wrong": 0,
-      "holm_alpha": 0.007143,
-      "holm_significant_05": false
+      "p_raw": 1.0,
+      "p_adjusted": 1.0,
+      "significant_005_corrected": false,
+      "holm_rank": 15
     },
-    {
-      "class": "wheat_powdery_mildew",
+    "wheat_powdery_mildew": {
+      "n_samples": 45,
+      "n01": 0,
+      "n10": 0,
+      "discordant": 0,
       "chi2": 0.0,
-      "p_value": 1.0,
-      "discordant_pairs": 0,
-      "b_right_c_wrong": 0,
-      "b_wrong_c_right": 0,
-      "both_right": 45,
-      "both_wrong": 0,
-      "holm_alpha": 0.008333,
-      "holm_significant_05": false
+      "p_raw": 1.0,
+      "p_adjusted": 1.0,
+      "significant_005_corrected": false,
+      "holm_rank": 16
     },
-    {
-      "class": "wheat_root_rot",
+    "wheat_root_rot": {
+      "n_samples": 45,
+      "n01": 0,
+      "n10": 0,
+      "discordant": 0,
       "chi2": 0.0,
-      "p_value": 1.0,
-      "discordant_pairs": 0,
-      "b_right_c_wrong": 0,
-      "b_wrong_c_right": 0,
-      "both_right": 43,
-      "both_wrong": 2,
-      "holm_alpha": 0.01,
-      "holm_significant_05": false
+      "p_raw": 1.0,
+      "p_adjusted": 1.0,
+      "significant_005_corrected": false,
+      "holm_rank": 17
     },
-    {
-      "class": "wheat_septoria",
+    "wheat_septoria": {
+      "n_samples": 45,
+      "n01": 0,
+      "n10": 0,
+      "discordant": 0,
       "chi2": 0.0,
-      "p_value": 1.0,
-      "discordant_pairs": 0,
-      "b_right_c_wrong": 0,
-      "b_wrong_c_right": 0,
-      "both_right": 44,
-      "both_wrong": 1,
-      "holm_alpha": 0.0125,
-      "holm_significant_05": false
+      "p_raw": 1.0,
+      "p_adjusted": 1.0,
+      "significant_005_corrected": false,
+      "holm_rank": 18
     },
-    {
-      "class": "wheat_smut",
+    "wheat_smut": {
+      "n_samples": 44,
+      "n01": 0,
+      "n10": 0,
+      "discordant": 0,
       "chi2": 0.0,
-      "p_value": 1.0,
-      "discordant_pairs": 0,
-      "b_right_c_wrong": 0,
-      "b_wrong_c_right": 0,
-      "both_right": 43,
-      "both_wrong": 1,
-      "holm_alpha": 0.016667,
-      "holm_significant_05": false
+      "p_raw": 1.0,
+      "p_adjusted": 1.0,
+      "significant_005_corrected": false,
+      "holm_rank": 19
     },
-    {
-      "class": "wheat_stem_fly",
+    "wheat_stem_fly": {
+      "n_samples": 35,
+      "n01": 0,
+      "n10": 0,
+      "discordant": 0,
       "chi2": 0.0,
-      "p_value": 1.0,
-      "discordant_pairs": 0,
-      "b_right_c_wrong": 0,
-      "b_wrong_c_right": 0,
-      "both_right": 35,
-      "both_wrong": 0,
-      "holm_alpha": 0.025,
-      "holm_significant_05": false
+      "p_raw": 1.0,
+      "p_adjusted": 1.0,
+      "significant_005_corrected": false,
+      "holm_rank": 20
     },
-    {
-      "class": "wheat_tan_spot",
+    "wheat_tan_spot": {
+      "n_samples": 45,
+      "n01": 0,
+      "n10": 3,
+      "discordant": 3,
       "chi2": 1.3333,
-      "p_value": 0.248213,
-      "discordant_pairs": 3,
-      "b_right_c_wrong": 3,
-      "b_wrong_c_right": 0,
-      "both_right": 37,
-      "both_wrong": 5,
-      "holm_alpha": 0.002381,
-      "holm_significant_05": false
+      "p_raw": 0.248213,
+      "p_adjusted": 1.0,
+      "significant_005_corrected": false,
+      "holm_rank": 1
     },
-    {
-      "class": "wheat_yellow_rust",
+    "wheat_yellow_rust": {
+      "n_samples": 45,
+      "n01": 0,
+      "n10": 0,
+      "discordant": 0,
       "chi2": 0.0,
-      "p_value": 1.0,
-      "discordant_pairs": 0,
-      "b_right_c_wrong": 0,
-      "b_wrong_c_right": 0,
-      "both_right": 44,
-      "both_wrong": 1,
-      "holm_alpha": 0.05,
-      "holm_significant_05": false
+      "p_raw": 1.0,
+      "p_adjusted": 1.0,
+      "significant_005_corrected": false,
+      "holm_rank": 21
     }
-  ],
-  "scipy_available": true
+  }
 }

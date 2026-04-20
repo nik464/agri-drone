@@ -580,10 +580,12 @@ export default function LiveStream() {
       }
     }
 
-    // Connect WebSocket
+    // Connect WebSocket — derive ws:// URL from the discovered HTTP API URL
+    const apiUrl = getApiUrl()  // e.g. "http://localhost:9000"
+    const wsBase = apiUrl.replace(/^http/, 'ws')
     const wsEndpoint = sourceMode === 'youtube'
-      ? 'ws://localhost:9000/api/stream/video'
-      : 'ws://localhost:9000/api/stream/live'
+      ? `${wsBase}/api/stream/video`
+      : `${wsBase}/api/stream/live`
     const ws = new WebSocket(wsEndpoint)
     wsRef.current = ws
 

@@ -1,0 +1,17 @@
+{
+  "run_id": "efficientnet_b0_fair_v1",
+  "backbone": "efficientnet_b0",
+  "training_recipe": "docs/training_recipe.md@v1",
+  "epochs_budget": 50,
+  "batch_size": 32,
+  "lr": 0.00125,
+  "status": "dry-run",
+  "metrics": null,
+  "notes": "Shared-recipe EfficientNet-B0 audit not executed on this host. Run on GPU: `python evaluate/matrix/audit_baseline.py --epochs 50 --batch-size 32`. Expected to match or exceed v3's 76.15% once augmentation and LR schedule are matched to YOLO's.",
+  "v3_reference": {
+    "accuracy": 0.7615,
+    "macro_f1": 0.7621,
+    "source_file": "evaluate/results/efficientnet_results.json"
+  },
+  "trained_at": "2026-04-17T14:42:27"
+}

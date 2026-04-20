@@ -1,0 +1,13 @@
+{
+  "run_id": "full-matrix-v4",
+  "n_cells": 2400,
+  "status": "dry-run",
+  "axes": [
+    "backbone",
+    "rule_engine",
+    "train_fraction",
+    "dataset",
+    "cv"
+  ],
+  "note": "Real aggregates populated after GPU runs finish; see evaluate/matrix/aggregate.py"
+}

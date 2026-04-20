@@ -1,0 +1,86 @@
+{
+  "total_overrides": 7,
+  "rescues": 0,
+  "corruptions": 4,
+  "neutral_both_right": 0,
+  "neutral_both_wrong": 3,
+  "details": [
+    {
+      "image": "aphid_385.png",
+      "ground_truth": "wheat_aphid",
+      "pred_A": "wheat_aphid",
+      "pred_B": "wheat_powdery_mildew",
+      "conf_A": 0.4318,
+      "conf_B": 0.563,
+      "A_correct": 1,
+      "B_correct": 0,
+      "category": "corruption"
+    },
+    {
+      "image": "brown_rust_1038.png",
+      "ground_truth": "wheat_brown_rust",
+      "pred_A": "wheat_black_rust",
+      "pred_B": "wheat_yellow_rust",
+      "conf_A": 0.6009,
+      "conf_B": 0.51,
+      "A_correct": 0,
+      "B_correct": 0,
+      "category": "neutral_both_wrong"
+    },
+    {
+      "image": "brown_rust_332.png",
+      "ground_truth": "wheat_brown_rust",
+      "pred_A": "wheat_blast",
+      "pred_B": "wheat_black_rust",
+      "conf_A": 0.5682,
+      "conf_B": 0.524,
+      "A_correct": 0,
+      "B_correct": 0,
+      "category": "neutral_both_wrong"
+    },
+    {
+      "image": "tan_spot_132.png",
+      "ground_truth": "wheat_tan_spot",
+      "pred_A": "wheat_tan_spot",
+      "pred_B": "wheat_black_rust",
+      "conf_A": 0.5271,
+      "conf_B": 0.526,
+      "A_correct": 1,
+      "B_correct": 0,
+      "category": "corruption"
+    },
+    {
+      "image": "tan_spot_392.png",
+      "ground_truth": "wheat_tan_spot",
+      "pred_A": "wheat_leaf_blight",
+      "pred_B": "wheat_black_rust",
+      "conf_A": 0.5239,
+      "conf_B": 0.544,
+      "A_correct": 0,
+      "B_correct": 0,
+      "category": "neutral_both_wrong"
+    },
+    {
+      "image": "tan_spot_402.png",
+      "ground_truth": "wheat_tan_spot",
+      "pred_A": "wheat_tan_spot",
+      "pred_B": "wheat_yellow_rust",
+      "conf_A": 0.4532,
+      "conf_B": 0.504,
+      "A_correct": 1,
+      "B_correct": 0,
+      "category": "corruption"
+    },
+    {
+      "image": "tan_spot_557.png",
+      "ground_truth": "wheat_tan_spot",
+      "pred_A": "wheat_tan_spot",
+      "pred_B": "wheat_mite",
+      "conf_A": 0.4895,
+      "conf_B": 0.528,
+      "A_correct": 1,
+      "B_correct": 0,
+      "category": "corruption"
+    }
+  ]
+}
