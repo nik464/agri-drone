@@ -1,0 +1,308 @@
+% ============================================================
+%  AgriDrone — Springer LNCS format
+%  Target: CVPPA 2026 @ ECCV / PlantCLEF 2026 @ CLEF
+%  Compile: pdflatex main && bibtex main && pdflatex main && pdflatex main
+% ============================================================
+\documentclass[runningheads]{llncs}
+
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{microtype}
+\usepackage{multirow}
+\usepackage{array}
+\renewcommand\UrlFont{\color{blue}\rmfamily}
+
+% ── FILL IN after Zenodo upload ──────────────────────────────
+\newcommand{\codeurl}{https://github.com/Ashut0sh-mishra/agri-drone}
+\newcommand{\zenododoi}{TODO: 10.5281/zenodo.XXXXXXX}   % <-- replace after upload
+% ─────────────────────────────────────────────────────────────
+
+\begin{document}
+
+\title{When Do Hand-Authored Symbolic Rules Help Modern CNNs\\
+       for Agricultural Disease Classification?\\
+       A Negative Result}
+
+\titlerunning{Symbolic Rules for Crop-Disease CNNs: A Negative Result}
+
+\author{Ashutosh Mishra}
+
+\authorrunning{A. Mishra}
+
+\institute{Independent Researcher, India\\
+\email{mishra.ashutosh@gmail.com}\\
+\url{\codeurl}}
+
+\maketitle
+
+% ── Abstract ─────────────────────────────────────────────────
+\begin{abstract}
+Hybrid neuro-symbolic systems---a CNN classifier audited by a hand-authored
+symbolic rule engine---are a recurring proposal in precision-agriculture
+literature, typically justified by appeals to interpretability and farmer
+trust. We test this proposal on 934 stratified held-out smartphone images
+covering 21 rice- and wheat-disease classes and report a \textbf{negative
+result}. A standalone YOLOv8n-cls backbone (Config~A) achieves
+96.15\,\% accuracy, macro-F1\,=\,0.9618, MCC\,=\,0.9596
+(95\,\% bootstrap CI [0.9486, 0.9732]) at 15.4\,ms/image on a
+single T4~GPU. Adding an agronomist-informed rule layer (Config~B) changes
+only \textbf{4 of 934 predictions}---all four in the wrong direction---
+yielding McNemar $p = 0.134$ (not significant), a 29$\times$ latency tax
+(444\,ms), and an 840\,\% increase in expected monetary loss under a cost
+matrix calibrated from ICAR/DAE advisory tables. Per-class McNemar tests
+with Holm--Bonferroni correction confirm 0/21 classes show a significant
+A-vs-B difference. A rules-only ablation (Config~C) collapses to 13.4\,\%
+accuracy, confirming the rule engine is non-trivial: the issue is
+\emph{informational redundancy} with the CNN. For clean-to-moderately-noisy
+smallholder imagery at current CNN accuracy ceilings, hand-authored symbolic
+rules add cost without adding recognition or cost-adjusted safety.
+
+\keywords{Negative result \and Crop-disease classification \and
+Neuro-symbolic ablation \and YOLOv8 \and Expected monetary loss \and
+Smallholder agriculture}
+\end{abstract}
+
+% ── 1. Introduction ──────────────────────────────────────────
+\section{Introduction}
+
+Precision agriculture increasingly deploys deep-learning classifiers for
+automated crop-disease triage from smartphone or drone imagery. A persistent
+theme in the literature is the proposal to augment CNN predictions with
+hand-authored symbolic rules---typically encoding agronomic knowledge about
+disease symptoms (colour signatures, lesion morphology, spatial
+patterns)---to improve accuracy, interpretability, or farmer trust
+\cite{Ferentinos2018,Ramcharan2017}.
+
+The implicit assumption is that symbolic domain knowledge adds value on top
+of what the CNN learns from data alone. We test this assumption directly with
+a three-configuration ablation:
+
+\begin{itemize}
+  \item \textbf{Config~A:} YOLOv8n-cls only (softmax argmax)
+  \item \textbf{Config~B:} YOLOv8n-cls + hand-authored rule engine (weighted re-ranking)
+  \item \textbf{Config~C:} Rule engine only (no CNN)
+\end{itemize}
+
+Our headline finding is negative. On a 934-image, 21-class held-out test set:
+(1) Config~A achieves 96.15\,\% accuracy (95\,\% CI [0.9486, 0.9732]);
+(2) Config~B changes only 4 of 934 predictions, all adversely (McNemar
+$p = 0.134$);
+(3) Config~B inflates expected monetary loss by 840\,\%;
+(4) Config~C achieves 13.4\,\%---genuine but informationally redundant signal.
+
+\paragraph{Contributions.}
+\begin{enumerate}
+  \item A three-configuration ablation with paired statistical tests showing
+        rules do not help a strong CNN on this task.
+  \item An EML cost analysis showing the hybrid pattern actively harms
+        cost-adjusted outcomes.
+  \item An open-source rule engine that serves as a non-trivial baseline for
+        future neuro-symbolic comparisons.
+  \item Reproducible evaluation scripts and committed prediction artefacts
+        for independent verification (DOI: \zenododoi).
+\end{enumerate}
+
+% ── 2. Related Work ──────────────────────────────────────────
+\section{Related Work}
+
+Modern crop-disease classification has advanced rapidly. Mohanty et
+al.~\cite{Mohanty2016} demonstrated $>$99\,\% accuracy on PlantVillage lab
+imagery, but field performance typically degrades to $\sim$30\,\%
+\cite{Barbedo2018}. Hybrid approaches combining CNNs with domain-specific
+rules have been proposed repeatedly \cite{Ferentinos2018,Ramcharan2017}, but
+head-to-head ablations quantifying the marginal value of the rule layer are
+rare. The key gap is empirical: most neuro-symbolic crop-disease papers
+report only the hybrid's performance, not a paired comparison against the CNN
+alone with statistical testing. We address this gap directly.
+
+% ── 3. Data ──────────────────────────────────────────────────
+\section{Data}
+
+\paragraph{Training corpus.}
+Training images were sourced from publicly available datasets including
+PlantVillage, Kaggle Bangladesh-rice-leaf and Indian-wheat-leaf collections,
+covering 21 classes (2 healthy + 5 rice disease + 14 wheat disease/pest).
+
+\paragraph{Held-out evaluation set.}
+The test set comprises \textbf{934 images} across 21 classes, split
+deterministically at seed~42 with a 70/15/15 train/val/test ratio. Class
+sizes range from 20 to 45 images per class.
+
+\paragraph{Augmentation leakage check.}
+21.2\,\% of test images carry \texttt{aug\_*} filenames. Every augmented
+file has a unique base ID; no sibling augmentations cross split boundaries
+(verified in \texttt{LEAKAGE\_INVESTIGATION\_REPORT.md}, committed to the
+repository).
+
+% ── 4. Method ────────────────────────────────────────────────
+\section{Method}
+
+\subsection{Three-Configuration Ablation}
+
+\begin{table}[h]
+\centering
+\caption{Ablation configurations.}
+\label{tab:configs}
+\begin{tabular}{@{}llll@{}}
+\toprule
+Config & CNN & Rules & Decision \\
+\midrule
+A & YOLOv8n-cls (1.4M params) & Off  & Softmax argmax \\
+B & YOLOv8n-cls               & On   & Weighted re-ranking \\
+C & Off                        & On   & Rule scores only \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent All three configs are evaluated on the same images in the same order.
+
+\subsection{Rule Engine}
+
+The rule engine (\texttt{src/agridrone/vision/rule\_engine.py}) is a
+substantive multi-stage system:
+\begin{itemize}
+  \item \textbf{Colour rules:} HSV-signature matching against per-disease profiles.
+  \item \textbf{Texture rules:} Bleaching-ratio detection, spot/pustule scoring.
+  \item \textbf{Spatial rules:} Stripe-vs-spot penalisation using Hough-line directionality.
+  \item \textbf{Conflict resolution:} \texttt{CandidateScore} aggregation with
+        \texttt{ConflictReport} when CNN top-1 $\neq$ rule top-1.
+\end{itemize}
+
+Blending weights: $\alpha_{\text{cnn}}=0.70$, $\alpha_{\text{rules}}=0.30$
+with evidence; 0.85/0.15 without.
+
+\subsection{Expected Monetary Loss (EML)}
+
+Per-image EML uses cost parameters from ICAR and DAE advisory tables:
+$c_{\text{miss}}=\text{\rupee}12{,}000$/ha for critical diseases;
+$c_{\text{alarm}}=\text{\rupee}640$/ha (one wasted spray round).
+
+\subsection{Statistical Testing}
+\begin{itemize}
+  \item \textbf{Bootstrap:} 10{,}000-replicate percentile CIs for accuracy,
+        macro-F1, MCC per config.
+  \item \textbf{McNemar:} Continuity-corrected paired test ($\alpha=0.05$)
+        on image-level correct/incorrect vectors.
+  \item \textbf{Holm--Bonferroni:} Per-class McNemar across 21 classes.
+\end{itemize}
+
+% ── 5. Results ───────────────────────────────────────────────
+\section{Results}
+
+\subsection{Headline Metrics}
+
+\begin{table}[h]
+\centering
+\caption{Per-configuration performance on 933 successfully predicted images.}
+\label{tab:headline}
+\begin{tabular}{@{}llllll@{}}
+\toprule
+Config & Accuracy & 95\,\% CI & Macro-F1 & MCC & Latency (ms) \\
+\midrule
+A (YOLO)       & \textbf{0.9615} & [0.9486, 0.9732] & 0.9618 & 0.9596 & 15.4  \\
+B (YOLO+rules) & 0.9572          & [0.9443, 0.9700] & 0.9574 & 0.9551 & 444.4 \\
+C (rules only) & 0.1338          & [0.1124, 0.1563] & 0.0771 & 0.0962 & 392.3 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent The A$\to$B gap is $-$0.43\,pp. SE\,$\approx$\,0.006; CIs overlap substantially.
+
+\subsection{Expected Monetary Loss}
+
+\begin{table}[h]
+\centering
+\caption{Expected monetary loss comparison.}
+\label{tab:eml}
+\begin{tabular}{@{}llll@{}}
+\toprule
+Config & Total EML (\rupee/ha) & Critical-disease EML (\rupee/ha) & $\Delta$ vs A \\
+\midrule
+A & 294.33    & 154.32    & ---      \\
+B & 2{,}769.06 & 1{,}305.36 & +840.8\,\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Override Analysis}
+
+The rule layer changes the CNN's top-1 prediction on \textbf{7 of 934 images}:
+0 rescues, 4 corruptions, 3 neutral. Zero rescues from 7 overrides.
+The rule engine fires on images where the CNN is already confident and correct.
+
+\subsection{McNemar Test}
+
+\begin{table}[h]
+\centering
+\caption{Paired McNemar test results.}
+\label{tab:mcnemar}
+\begin{tabular}{@{}lllll@{}}
+\toprule
+Pair  & $n_{\text{discordant}}$ & $\chi^2$ & $p$-value & Significant? \\
+\midrule
+A vs B & 4   & 2.25   & 0.134             & No  \\
+A vs C & 777 & 767.03 & $<10^{-300}$      & Yes \\
+B vs C & 773 & 763.03 & $<10^{-300}$      & Yes \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Per-Class Holm--Bonferroni Correction}
+
+Per-class continuity-corrected McNemar tests with Holm--Bonferroni correction
+across all 21 classes (Config~A vs~B, $n=933$) yield
+\textbf{0/21 significant classes} ($\alpha=0.05$). The rule engine neither
+reliably helps nor hurts any individual class. Full results are in
+\texttt{evaluate/results/holm\_bonferroni\_perclass.csv}.
+
+% ── 6. Threats to Validity ───────────────────────────────────
+\section{Threats to Validity}
+
+\begin{enumerate}
+  \item \textbf{Small test set.} $n=934$ limits detectable effect size to
+        $\geq\!\sim$0.6\,pp aggregate and $\geq\!\sim$0.06 F1 per class.
+        A dataset of $n\in[2000,5000]$ would be needed to detect smaller effects.
+
+  \item \textbf{Single backbone.} All results use YOLOv8n-cls (1.4M params).
+        The finding may not transfer to weaker backbones where the CNN leaves
+        more room for rules to add value. Multi-backbone comparison is planned
+        (\texttt{configs/matrix/paper2.yaml}: 45 cells, 5 backbones $\times$
+        3 geographies $\times$ 3 folds) but not yet executed.
+
+  \item \textbf{Lab-quality imagery.} The evaluation set consists of
+        smartphone leaf photographs, not field-deployed drone imagery.
+
+  \item \textbf{Single seed.} Training used seed~42 only.
+
+  \item \textbf{Cost parameters.} EML depends on the chosen cost matrix;
+        different assumptions would change the 840\,\% headline. The cost
+        table is committed at \texttt{configs/economics/india\_2025.yaml}.
+\end{enumerate}
+
+% ── 7. Conclusion ────────────────────────────────────────────
+\section{Conclusion}
+
+On 934 stratified smartphone images across 21 rice- and wheat-disease
+classes, a hand-authored symbolic rule layer bolted onto a 96\,\%-accurate
+YOLOv8n-cls backbone changes 4 predictions in the wrong direction, is not
+significant under paired McNemar ($p=0.134$), imposes a 29$\times$ latency
+tax, and inflates expected monetary loss by 840\,\% under a
+smallholder-calibrated cost matrix. Per-class Holm--Bonferroni correction
+confirms 0/21 classes show significant A-vs-B difference. At the accuracy
+ceilings modern lightweight CNNs reach on curated leaf-photo datasets, the
+neuro-symbolic hybrid pattern does not pay its rent.
+
+\paragraph{Reproducibility.}
+All prediction CSVs, bootstrap CI files, and evaluation scripts are committed
+to the public repository (\url{\codeurl}). Model weights and dataset are
+archived at \url{https://doi.org/\zenododoi}.
+
+% ── References ───────────────────────────────────────────────
+\bibliographystyle{splncs04}
+\bibliography{references}
+
+\end{document}
