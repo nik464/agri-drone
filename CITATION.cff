@@ -13,8 +13,8 @@ abstract: >
 type: software
 version: "0.3.0-mega-dataset"
 license: MIT
-url: "https://github.com/nik464/agri-drone"
-repository-code: "https://github.com/nik464/agri-drone"
+url: "https://github.com/Ashut0sh-mishra/agri-drone"
+repository-code: "https://github.com/Ashut0sh-mishra/agri-drone"
 authors:
   - family-names: "Mishra"
     given-names: "Ashutosh"
